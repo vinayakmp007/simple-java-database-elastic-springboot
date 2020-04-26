@@ -1,0 +1,47 @@
+version: '2.0'
+
+services: 
+  elasticsearch:
+    image: elasticsearch:7.6.0
+    volumes:
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - simplenet
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=passWrd
+      - MYSQL_DATABASE=suggestion
+      - MYSQL_USER=suggestionuser
+      - MYSQL_PASSWORD=passdb
+    ports:
+      - "3306:3306"
+    networks:
+      - simplenet
+      
+  suggestionbox:
+    image: springio/simple-elastic-project
+    depends_on:
+      - mysql
+      - elasticsearch
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_USER=suggestionuser
+      - DATABASE_PASSWORD=passdb
+      - DATABASE_NAME=suggestion
+      - DATABASE_PORT=3306
+      - ELASTIC_SEARCH_URL=http://elasticsearch:9200/_bulk
+    networks:
+      - simplenet
+networks:
+    simplenet:
+      driver: bridge
+         
