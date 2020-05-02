@@ -1,0 +1,67 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.vinayaksproject.simpleelasticproject.dao;
+
+import com.vinayaksproject.simpleelasticproject.ElasticConfig;
+import com.vinayaksproject.simpleelasticproject.enums.IndexOperations;
+import org.elasticsearch.action.ActionRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.MultiGetRequest;
+import org.elasticsearch.action.get.MultiGetRequest.Item;
+import org.elasticsearch.action.index.IndexRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+/**
+ *
+ * @author vinayak
+ */
+@Configuration
+public class RequestFactory {
+
+    @Autowired
+    private ElasticConfig elasticConfig;
+
+    @Bean(autowireCandidate = false)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public ActionRequest newActionRequest(IndexOperations indexOperation) {
+        ActionRequest actionRequest = null;
+        if (null != indexOperation) {
+            switch (indexOperation) {
+                case CREATE:
+                case UPDATE:
+                    actionRequest = new IndexRequest(elasticConfig.getEsIndexName());
+                    break;
+                case DELETE:
+                    actionRequest = new DeleteRequest(elasticConfig.getEsIndexName());
+                    break;
+                case GET:
+                    actionRequest = new GetRequest(elasticConfig.getEsIndexName());
+                    break;
+                case BULK:
+                    actionRequest = new BulkRequest();
+                    break;
+                case MULTI:
+                    actionRequest = new MultiGetRequest();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return actionRequest;
+    }
+
+    @Bean(autowireCandidate = false)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public MultiGetRequest.Item newMultiGetRequestItem(String id) {
+        return new MultiGetRequest.Item(elasticConfig.getEsIndexName(),id);
+    }
+}

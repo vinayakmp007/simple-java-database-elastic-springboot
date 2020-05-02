@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
  *
  * @author vinayak
  */
-@Component
+
 @ConfigurationProperties("jobserver")
 public class JobServer {
   protected String name;
- protected String description;  
+ private int threads;  
 
     /**
      * @return the name
@@ -35,14 +35,21 @@ public class JobServer {
     /**
      * @return the description
      */
-    public String getDescription() {
-        return description;
+    public int getThreads() {
+        return threads;
     }
 
     /**
-     * @param description the description to set
+     * @param threads the Threads to set
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(int threads) {
+        this.setThreads(threads);
+    }
+
+    /**
+     * @param threads the threads to set
+     */
+    public void setThreads(int threads) {
+        this.threads = threads;
     }
 }

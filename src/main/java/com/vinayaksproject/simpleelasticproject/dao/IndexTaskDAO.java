@@ -9,7 +9,6 @@ import com.vinayaksproject.simpleelasticproject.entity.IndexTask;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.List;
 import javax.transaction.Transactional;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

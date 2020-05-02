@@ -17,16 +17,13 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author vinayak
  */
 @Configuration
-@Component
 public class DAOIteratorFactory {
     @Autowired
     SuggestionDAO suggestionDAO;
