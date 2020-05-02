@@ -14,6 +14,7 @@ import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.MultiGetRequest;
 import org.elasticsearch.action.get.MultiGetRequest.Item;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -37,8 +38,10 @@ public class RequestFactory {
         if (null != indexOperation) {
             switch (indexOperation) {
                 case CREATE:
-                case UPDATE:
                     actionRequest = new IndexRequest(elasticConfig.getEsIndexName());
+                    break;
+                case UPDATE:
+                    actionRequest = new UpdateRequest().index(elasticConfig.getEsIndexName());                   
                     break;
                 case DELETE:
                     actionRequest = new DeleteRequest(elasticConfig.getEsIndexName());

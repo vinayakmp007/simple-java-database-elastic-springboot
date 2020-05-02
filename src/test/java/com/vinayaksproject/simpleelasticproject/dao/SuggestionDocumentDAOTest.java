@@ -6,7 +6,6 @@
 package com.vinayaksproject.simpleelasticproject.dao;
 
 import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
-import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 import com.vinayaksproject.simpleelasticproject.enums.IndexOperations;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -137,7 +136,7 @@ public class SuggestionDocumentDAOTest {
 
     @Test
     public void testBulkAPIandMultiGet() {
-        final List<SuggestionDocument> itemList = new ArrayList();
+        List<SuggestionDocument> itemList = new ArrayList();
         final List idList = new ArrayList<String>();
         List<SuggestionDocument>  documentList = null;
         for (int i = 0; i < 2500; i++) {
@@ -165,5 +164,48 @@ public class SuggestionDocumentDAOTest {
             Logger.getLogger(SuggestionDocumentDAOTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("Exception was thrown" + ex);
         }
+        
+        //check update requests
+        for(SuggestionDocument temp:itemList){
+            temp.setDbLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+            temp.setSuggestion(temp.getSuggestion()+"Test");
+        }
+        
+        
+                try {
+          ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.UPDATE);
+          documentList=ElasticSuggestionDAO.get(idList);
+          assertNotNull(documentList);
+          assertEquals(2500,documentList.size());
+            Map<String, SuggestionDocument> map = (Map<String, SuggestionDocument>) itemList.stream().collect(
+                Collectors.toMap(x->x.getId(), x->x));
+          for(SuggestionDocument temp:documentList){
+              assertTrue(map.containsKey(temp.getId()));
+              assertEquals(map.get(temp.getId()),temp);
+          }
+        } catch (Exception ex) {
+            Logger.getLogger(SuggestionDocumentDAOTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Exception was thrown" + ex);
+        }
+                
+                //verfy bulkdelete
+          List<SuggestionDocument> deletedList = itemList.subList(0, 800);
+         itemList=itemList.subList(800,2500); 
+                  try {
+          ElasticSuggestionDAO.bulkAPI(deletedList, IndexOperations.DELETE);
+          documentList=ElasticSuggestionDAO.get(idList);
+          assertNotNull(documentList);
+          documentList= documentList.stream().filter(x->x!=null).collect(Collectors.toList());//null will be returned with deleted ids
+          assertEquals(itemList.size(),documentList.size());
+            Map<String, SuggestionDocument> map = (Map<String, SuggestionDocument>) itemList.stream().collect(
+                Collectors.toMap(x->x.getId(), x->x));
+          for(SuggestionDocument temp:documentList){
+              assertTrue(map.containsKey(temp.getId()));
+              assertEquals(map.get(temp.getId()),temp);
+          }
+        } catch (IOException ex) {
+            Logger.getLogger(SuggestionDocumentDAOTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Exception was thrown" + ex);
+        }     
     }
 }
