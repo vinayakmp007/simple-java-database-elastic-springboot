@@ -5,8 +5,8 @@
  */
 package com.vinayaksproject.simpleelasticproject.dao;
 
-import com.vinayaksproject.simpleelasticproject.JobServer;
-import com.vinayaksproject.simpleelasticproject.entity.IndexTask;
+import com.vinayaksproject.simpleelasticproject.JobServerConfig;
+import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.IndexJobType;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class IndexTaskDAOTest {
     private List itemList;
     
     @Autowired
-    JobServer jobServer;
+    JobServerConfig jobServer;
     public IndexTaskDAOTest() {
     }
     
@@ -52,19 +52,19 @@ public class IndexTaskDAOTest {
          instance.deleteAllInSingleQuery();
         itemList = new ArrayList<>();
         for(int i=0;i<3;i++){
-            IndexTask temp = new IndexTask();
+            IndexTaskEntry temp = new IndexTaskEntry();
             temp.setDetails("IndexTask"+i);
             temp.setTaskType(IndexJobType.FULL_INDEX);
             itemList.add(instance.save(temp));
         }
          for(int i=0;i<15;i++){
-            IndexTask temp = new IndexTask();
+            IndexTaskEntry temp = new IndexTaskEntry();
             temp.setDetails("IndexTask"+i);
             temp.setTaskType(IndexJobType.UPDATE_INDEX);
             itemList.add(instance.save(temp));
         }
         for(int i=0;i<25;i++){
-            IndexTask temp = new IndexTask();
+            IndexTaskEntry temp = new IndexTaskEntry();
             temp.setDetails("IndexTask"+i);
             temp.setTaskType(IndexJobType.INSTANT_UPDATE);
             itemList.add(instance.save(temp));
@@ -82,10 +82,10 @@ public class IndexTaskDAOTest {
     @Test
     public void testTransaction(){
         
-        List<IndexTask> result = instance.findByStatus(JobStatus.CREATED, PageRequest.of(0, 10, Sort.by("id")));
+        List<IndexTaskEntry> result = instance.findByStatus(JobStatus.CREATED, PageRequest.of(0, 10, Sort.by("id")));
         
       
-       for(IndexTask task:result){
+       for(IndexTaskEntry task:result){
            task.setServerName(jobServer.getName());
            instance.lockTaskforServer("aNotherServer", task.getId(), JobStatus.CREATED);
            try{

@@ -97,5 +97,10 @@ public class Suggestion extends EntityAudit {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Suggestion{" + "id=" + id + ", suggestion=" + suggestion + ", hits=" + hits +",lastupdatedate="+ this.lastUpdateDate+'}';
+    }
     
 }

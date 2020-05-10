@@ -7,7 +7,7 @@ package com.vinayaksproject.simpleelasticproject.dao.iterator;
 
 import com.vinayaksproject.simpleelasticproject.dao.SuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.utils.SliceIterator;
-import java.util.List;
+import java.sql.Timestamp;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -16,21 +16,21 @@ import org.springframework.data.domain.Slice;
  * @author vinayak
  */
 
-public final class NewListSuggesionIter extends SliceIterator{
- protected List<Integer> newList;   
- 
+public final class NewActiveSuggestionIter extends SliceIterator{
+    protected Timestamp fromDate;
+    
     public SuggestionDAO baseDAO;
     
-    public NewListSuggesionIter(SuggestionDAO suggestionDAO,List<Integer> newList,Pageable initialPage){
+    public NewActiveSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
       super();
       this.baseDAO=suggestionDAO;
-      this.newList=newList;
+      setFromDate(fromDate);
       setSlice(daoFunction(initialPage));
       applySlice();
     }
     @Override
     protected Slice daoFunction(Pageable nextPageable) {
-       return getBaseDAO().findByIdIn(getNewList(),nextPageable);
+       return getBaseDAO().findBylastUpdateDateAfterAndDeletedFalse(getFromDate(),nextPageable);
     }
 
     /**
@@ -48,17 +48,17 @@ public final class NewListSuggesionIter extends SliceIterator{
     }
 
     /**
-     * @return the newList
+     * @return the fromDate
      */
-    public List<Integer> getNewList() {
-        return newList;
+    public Timestamp getFromDate() {
+        return fromDate;
     }
 
     /**
-     * @param newList the newList to set
+     * @param fromDate the fromDate to set
      */
-    public void setNewList(List<Integer> newList) {
-        this.newList = newList;
+    public void setFromDate(Timestamp fromDate) {
+        this.fromDate = fromDate;
     }
     
 }

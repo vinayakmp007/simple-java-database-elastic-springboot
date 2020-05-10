@@ -15,13 +15,13 @@ import org.springframework.data.domain.Slice;
  * @author vinayak
  */
 
-public final class FullActiveSuggesionIter extends SliceIterator{
+public final class FullActiveSuggestionIter extends SliceIterator{
     
     private SuggestionDAO suggestionDAO;
 
     
    
-    public FullActiveSuggesionIter(SuggestionDAO suggestionDAO,Pageable initialPage){
+    public FullActiveSuggestionIter(SuggestionDAO suggestionDAO,Pageable initialPage){
       super();
       this.suggestionDAO=suggestionDAO;
       setSlice(daoFunction(initialPage));

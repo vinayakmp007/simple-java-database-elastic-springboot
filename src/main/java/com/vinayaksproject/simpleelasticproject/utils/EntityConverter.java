@@ -21,6 +21,7 @@ public class EntityConverter {
     document.setDbCreationDate(suggestionEntity.getCreationDate());
     document.setDbLastUpdateDate(suggestionEntity.getLastUpdateDate());
     document.setDbVersion(suggestionEntity.getVersion());
+    document.setDbdeleted(suggestionEntity.isDeleted());
     return document;
     }
     

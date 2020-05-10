@@ -31,14 +31,14 @@ import org.springframework.data.domain.Sort;
  * @author vinayak
  */
 @SpringBootTest   
-public class FullActiveSuggesionIterTest{
+public class FullActiveSuggestionIterTest{
     @Autowired
     private DAOIteratorFactory DAOIteratorFactory;
     @Autowired
     private  SuggestionDAO suggestionDAO;
     
     private  List<Suggestion> itemList;
-    public FullActiveSuggesionIterTest() {
+    public FullActiveSuggestionIterTest() {
     }
     
     @BeforeAll
@@ -78,7 +78,7 @@ public class FullActiveSuggesionIterTest{
     }
 
     /**
-     * Test of daoFunction method, of class FullActiveSuggesionIter.
+     * Test of daoFunction method, of class FullActiveSuggestionIter.
      */
     @Test
     public void testDaoFunction() {
@@ -86,7 +86,7 @@ public class FullActiveSuggesionIterTest{
         try{
        
         Pageable page=PageRequest.of(0, 10);
-        FullActiveSuggesionIter instance =(FullActiveSuggesionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
+        FullActiveSuggestionIter instance =(FullActiveSuggestionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
         Slice result = instance.daoFunction(page);
         assertNotNull(result);
         assertEquals(10,result.getNumberOfElements());
@@ -111,7 +111,7 @@ public class FullActiveSuggesionIterTest{
     }
 
     /**
-     * Test of getBaseDAO method, of class FullActiveSuggesionIter.
+     * Test of getBaseDAO method, of class FullActiveSuggestionIter.
      */
     @Test
     public void testIterator() {
@@ -122,7 +122,7 @@ public class FullActiveSuggesionIterTest{
        }
        for(int pageSize=1;pageSize<=26;pageSize++){
          Pageable page=PageRequest.of(0, pageSize,Sort.by("id"));
-        Iterator<Suggestion> instance =(FullActiveSuggesionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
+        Iterator<Suggestion> instance =(FullActiveSuggestionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
         Iterator<Suggestion> listIterator = itemList.iterator();
         int count=0;
         while(instance.hasNext()&&listIterator.hasNext()){
@@ -136,7 +136,7 @@ public class FullActiveSuggesionIterTest{
        }
         try{
             Pageable page=PageRequest.of(0, 1);
-            Iterator<Suggestion> instance =(FullActiveSuggesionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
+            Iterator<Suggestion> instance =(FullActiveSuggestionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
             instance.remove();
             fail("No exception was thrown");
         }

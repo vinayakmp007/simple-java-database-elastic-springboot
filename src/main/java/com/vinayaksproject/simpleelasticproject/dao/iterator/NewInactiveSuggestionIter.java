@@ -16,12 +16,12 @@ import org.springframework.data.domain.Slice;
  * @author vinayak
  */
 
-public final class NewInactiveSuggesionIter extends SliceIterator{
+public final class NewInactiveSuggestionIter extends SliceIterator{
 protected Timestamp fromDate;    
 
     public SuggestionDAO baseDAO;
     
-    public NewInactiveSuggesionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
+    public NewInactiveSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
       super();
       this.baseDAO=suggestionDAO;
       setFromDate(fromDate);

@@ -31,6 +31,7 @@ public interface SuggestionDAO extends CrudRepository<Suggestion, Integer> {
     Slice<Suggestion> findBylastUpdateDateAfterAndDeletedFalse(Timestamp lastUpdateDate, Pageable pageable);
     Slice<Suggestion> findBylastUpdateDateAfterAndDeletedTrue(Timestamp lastUpdateDate, Pageable pageable);
     Slice<Suggestion> findByIdIn(Collection<Integer> ids, Pageable pageable);
+     Slice<Suggestion> findBylastUpdateDateAfter(Timestamp lastUpdateDate, Pageable pageable);
     
     
 }

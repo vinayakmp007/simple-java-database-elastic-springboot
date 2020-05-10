@@ -23,7 +23,7 @@ import javax.persistence.Table;
  */
 @Entity(name="indextask")
 @Table(name="indextask")
-public class IndexTask extends EntityAudit{
+public class IndexTaskEntry extends EntityAudit{
      @Id
     @GeneratedValue
     private int id;

@@ -37,6 +37,7 @@ private String EsDoctypeName;
 private String EsClusterName;
     
 private String clusterNodes;
+private String esShardsNo;
 
 
 @Bean(destroyMethod = "close")
@@ -170,6 +171,20 @@ public ObjectMapper defaultObjectMapper(){
      */
     public void setEsDoctypeName(String EsDoctypeName) {
         this.EsDoctypeName = EsDoctypeName;
+    }
+
+    /**
+     * @return the esShardsNo
+     */
+    public String getEsShardsNo() {
+        return esShardsNo;
+    }
+
+    /**
+     * @param esShardsNo the esShardsNo to set
+     */
+    public void setEsShardsNo(String esShardsNo) {
+        this.esShardsNo = esShardsNo;
     }
     
 }

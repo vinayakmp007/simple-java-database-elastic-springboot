@@ -65,7 +65,7 @@ public class SuggestionDocumentDAO implements ElasticSuggestionDAO {
     @Override
     public String save(SuggestionDocument suggestionDocument) throws IOException {
         if (suggestionDocument.getId() == null) {
-            throw new IllegalStateException("The id of suggestion document must not be null");
+            throw new IllegalArgumentException("The id of suggestion document must not be null");
         }
         Map documentMap = objectMapper.convertValue(suggestionDocument, Map.class);
         IndexRequest indexRequest = (IndexRequest) requestFactory.newActionRequest(IndexOperations.CREATE);
@@ -220,33 +220,47 @@ public class SuggestionDocumentDAO implements ElasticSuggestionDAO {
 
     @Override
     public void bulkAPI(List<SuggestionDocument> suggestionDocumentList, IndexOperations indexOperation) throws IOException {
+        IndexOperations operationforEntity = null;
         BulkRequest bulkRequest = (BulkRequest) requestFactory.newActionRequest(IndexOperations.BULK);
         bulkRequest.setRefreshPolicy(RefreshPolicy.NONE)
                 .timeout(TimeValue.timeValueMinutes(5));
         for (SuggestionDocument doc : suggestionDocumentList) {
             DocWriteRequest docwriteRequest = null;
             Map documentMap = objectMapper.convertValue(doc, Map.class);
-            if (null != indexOperation) {
-                switch (indexOperation) {
-                    case CREATE:
-                        docwriteRequest = ((IndexRequest) requestFactory.newActionRequest(indexOperation)).id(doc.getId())
-                                .source(documentMap)
-                                .setRefreshPolicy(RefreshPolicy.NONE);
-                        break;
-                    case UPDATE:
-                        docwriteRequest = ((UpdateRequest) requestFactory.newActionRequest(indexOperation)).id(doc.getId())
-                                .doc(documentMap)
-                                .setRefreshPolicy(RefreshPolicy.NONE);
-                        break;
-                    case DELETE:
-                        docwriteRequest = ((DeleteRequest) requestFactory.newActionRequest(indexOperation)).id(doc.getId())
-                                .setRefreshPolicy(RefreshPolicy.NONE);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Selected operation not feasible in bulk");
-
+            if (null == indexOperation) {
+                if (doc.getDbdeleted()) {
+                    operationforEntity = IndexOperations.DELETE;
+                } else {
+                    if (doc.getDbVersion() > 0) {
+                        operationforEntity = IndexOperations.UPDATE;
+                    } else {
+                        operationforEntity = IndexOperations.CREATE;
+                    }
                 }
+            } else {
+                operationforEntity = indexOperation;
             }
+
+            switch (operationforEntity) {
+                case CREATE:
+                    docwriteRequest = ((IndexRequest) requestFactory.newActionRequest(indexOperation)).id(doc.getId())
+                            .source(documentMap)
+                            .setRefreshPolicy(RefreshPolicy.NONE);
+                    break;
+                case UPDATE:
+                    docwriteRequest = ((UpdateRequest) requestFactory.newActionRequest(indexOperation)).id(doc.getId())
+                            .doc(documentMap)
+                            .setRefreshPolicy(RefreshPolicy.NONE);
+                    break;
+                case DELETE:
+                    docwriteRequest = ((DeleteRequest) requestFactory.newActionRequest(indexOperation)).id(doc.getId())
+                            .setRefreshPolicy(RefreshPolicy.NONE);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Selected operation not feasible in bulk");
+
+            }
+
             bulkRequest.add(docwriteRequest);
         }
         try {
@@ -300,5 +314,10 @@ public class SuggestionDocumentDAO implements ElasticSuggestionDAO {
                 }
             }
         }
+    }
+
+    @Override
+    public void bulkAPI(List<SuggestionDocument> suggestionDocumentList) throws IOException {
+        bulkAPI(suggestionDocumentList, null);
     }
 }

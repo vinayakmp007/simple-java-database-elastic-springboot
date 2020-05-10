@@ -5,10 +5,11 @@
  */
 package com.vinayaksproject.simpleelasticproject.dao;
 
-import com.vinayaksproject.simpleelasticproject.dao.iterator.FullActiveSuggesionIter;
-import com.vinayaksproject.simpleelasticproject.dao.iterator.NewActiveSuggesionIter;
-import com.vinayaksproject.simpleelasticproject.dao.iterator.NewInactiveSuggesionIter;
-import com.vinayaksproject.simpleelasticproject.dao.iterator.NewListSuggesionIter;
+import com.vinayaksproject.simpleelasticproject.dao.iterator.FullActiveSuggestionIter;
+import com.vinayaksproject.simpleelasticproject.dao.iterator.NewActiveSuggestionIter;
+import com.vinayaksproject.simpleelasticproject.dao.iterator.NewInactiveSuggestionIter;
+import com.vinayaksproject.simpleelasticproject.dao.iterator.NewListSuggestionIter;
+import com.vinayaksproject.simpleelasticproject.dao.iterator.NewSuggestionIter;
 import com.vinayaksproject.simpleelasticproject.utils.SliceIterator;
 import java.sql.Timestamp;
 import java.util.List;
@@ -33,19 +34,22 @@ public class DAOIteratorFactory {
     public SliceIterator NewSuggesionIterator(Boolean isDeleted,Timestamp startDate,List<Integer> itemIds,Pageable initialPage){
       SliceIterator iterator=null;
         if(itemIds!=null){
-            iterator= new NewListSuggesionIter(suggestionDAO,itemIds,initialPage);
+            iterator= new NewListSuggestionIter(suggestionDAO,itemIds,initialPage);
         }
         else if(startDate!=null&&isDeleted!=null){
             if(isDeleted){
-               iterator=  new NewInactiveSuggesionIter(suggestionDAO,startDate,initialPage);
+               iterator=  new NewInactiveSuggestionIter(suggestionDAO,startDate,initialPage);
             }
             else{
-               iterator=   new NewActiveSuggesionIter(suggestionDAO,startDate,initialPage);
+               iterator=   new NewActiveSuggestionIter(suggestionDAO,startDate,initialPage);
             }
             
         }
+        else if(startDate!=null&&isDeleted==null){
+             iterator=   new NewSuggestionIter(suggestionDAO,startDate,initialPage);
+        }
         else{
-             iterator= new FullActiveSuggesionIter(suggestionDAO,initialPage);
+             iterator= new FullActiveSuggestionIter(suggestionDAO,initialPage);
         }
         return iterator;
     }

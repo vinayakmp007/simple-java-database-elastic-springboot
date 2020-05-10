@@ -5,10 +5,11 @@
  */
 package com.vinayaksproject.simpleelasticproject.dao;
 
-import com.vinayaksproject.simpleelasticproject.entity.IndexTask;
+import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.List;
 import javax.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,8 +21,8 @@ import org.springframework.stereotype.Repository;
  * @author vinayak
  */
 @Repository
-public interface IndexTaskDAO extends CrudRepository<IndexTask, Integer> {
-   List<IndexTask> findByStatus(JobStatus statusm,Pageable page);
+public interface IndexTaskDAO extends CrudRepository<IndexTaskEntry, Integer> {
+   List<IndexTaskEntry> findByStatus(JobStatus statusm,Pageable page);
     @Modifying
     @Query("DELETE FROM indextask")
     @Transactional
@@ -32,5 +33,7 @@ public interface IndexTaskDAO extends CrudRepository<IndexTask, Integer> {
     @Transactional
     public void lockTaskforServer(String serverName,Integer taskId,JobStatus status);
    
+    
+    
     
 }

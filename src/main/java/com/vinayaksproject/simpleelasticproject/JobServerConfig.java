@@ -5,18 +5,26 @@
  */
 package com.vinayaksproject.simpleelasticproject;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
  *
  * @author vinayak
  */
-
+@Component
 @ConfigurationProperties("jobserver")
-public class JobServer {
+public class JobServerConfig {
   protected String name;
  private int threads;  
+ private int bulkDocCount; 
+ private int  bulkSize;
+ private int  pageSize;
 
     /**
      * @return the name
@@ -52,4 +60,37 @@ public class JobServer {
     public void setThreads(int threads) {
         this.threads = threads;
     }
+
+    /**
+     * @return the bulkSize
+     */
+    public int getBulkSize() {
+        return bulkSize;
+    }
+
+    /**
+     * @param bulkSize the bulkSize to set
+     */
+    public void setBulkSize(int bulkSize) {
+        this.bulkSize = bulkSize;
+    }
+
+    /**
+     * @return the bulkDocCount
+     */
+    public int getBulkDocCount() {
+        return bulkDocCount;
+    }
+
+    /**
+     * @param bulkDocCount the bulkDocCount to set
+     */
+    public void setBulkDocCount(int bulkDocCount) {
+        this.bulkDocCount = bulkDocCount;
+    }
+
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+     public Pageable getInitialPage(){
+         return PageRequest.of(0, pageSize);
+     }
 }

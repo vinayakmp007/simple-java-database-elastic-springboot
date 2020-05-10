@@ -27,6 +27,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 /**
  *
@@ -130,7 +131,8 @@ public class SuggestionDocumentDAOTest {
             ElasticSuggestionDAO.save(document);
             fail("No exception was thrown");
         } catch (Exception ex) {
-            assertTrue(ex instanceof IllegalStateException);
+            System.out.println(ex);
+            assertTrue(ex instanceof InvalidDataAccessApiUsageException);
         }
     }
 

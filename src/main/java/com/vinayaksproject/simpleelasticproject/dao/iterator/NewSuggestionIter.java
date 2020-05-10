@@ -11,40 +11,24 @@ import java.sql.Timestamp;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-/**This gives an iterator to access all Suggestion elements
+/**
  *
  * @author vinayak
  */
-
-public final class NewActiveSuggesionIter extends SliceIterator{
-    protected Timestamp fromDate;
-    
-    public SuggestionDAO baseDAO;
-    
-    public NewActiveSuggesionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
+public final class NewSuggestionIter extends SliceIterator{
+private Timestamp fromDate;  
+private SuggestionDAO baseDAO;
+   public NewSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
       super();
       this.baseDAO=suggestionDAO;
       setFromDate(fromDate);
       setSlice(daoFunction(initialPage));
       applySlice();
     }
+
     @Override
     protected Slice daoFunction(Pageable nextPageable) {
-       return getBaseDAO().findBylastUpdateDateAfterAndDeletedFalse(getFromDate(),nextPageable);
-    }
-
-    /**
-     * @return the baseDAO
-     */
-    public SuggestionDAO getBaseDAO() {
-        return baseDAO;
-    }
-
-    /**
-     * @param baseDAO the baseDAO to set
-     */
-    public void setBaseDAO(SuggestionDAO baseDAO) {
-        this.baseDAO = baseDAO;
+     return getBaseDAO().findBylastUpdateDateAfter(getFromDate(),nextPageable);
     }
 
     /**
@@ -60,5 +44,20 @@ public final class NewActiveSuggesionIter extends SliceIterator{
     public void setFromDate(Timestamp fromDate) {
         this.fromDate = fromDate;
     }
+
+    /**
+     * @return the baseDAO
+     */
+    public SuggestionDAO getBaseDAO() {
+        return baseDAO;
+    }
+
+    /**
+     * @param baseDAO the baseDAO to set
+     */
+    public void setBaseDAO(SuggestionDAO baseDAO) {
+        this.baseDAO = baseDAO;
+    }
+    
     
 }

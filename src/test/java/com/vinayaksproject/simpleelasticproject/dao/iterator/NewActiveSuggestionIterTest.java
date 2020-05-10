@@ -90,7 +90,7 @@ public class NewActiveSuggestionIterTest{
          
      newTime = new Timestamp(System.currentTimeMillis()); 
         try {
-            Thread.sleep(10000l);
+            Thread.sleep(1000l);
         } catch (InterruptedException ex) {
            fail("Test failed"+ex);
         }
@@ -125,7 +125,7 @@ public class NewActiveSuggestionIterTest{
     }
 
     /**
-     * Test of daoFunction method, of class FullActiveSuggesionIter.
+     * Test of daoFunction method, of class FullActiveSuggestionIter.
      */
     @Test
     public void testDaoFunction() {
@@ -133,7 +133,7 @@ public class NewActiveSuggestionIterTest{
         try{
        
         Pageable page=PageRequest.of(0, 10);
-        NewActiveSuggesionIter instance =(NewActiveSuggesionIter)DAOIteratorFactory.NewSuggesionIterator(false,newTime,null,page);
+        NewActiveSuggestionIter instance =(NewActiveSuggestionIter)DAOIteratorFactory.NewSuggesionIterator(false,newTime,null,page);
         Slice result = instance.daoFunction(page);
         assertNotNull(result);
         assertEquals(10,result.getNumberOfElements());
@@ -158,7 +158,7 @@ public class NewActiveSuggestionIterTest{
     }
 
     /**
-     * Test of getBaseDAO method, of class FullActiveSuggesionIter.
+     * Test of getBaseDAO method, of class FullActiveSuggestionIter.
      */
     @Test
     public void testIterator() {
@@ -169,7 +169,7 @@ public class NewActiveSuggestionIterTest{
        }
        for(int pageSize=1;pageSize<=30;pageSize++){
          Pageable page=PageRequest.of(0, pageSize,Sort.by("id"));
-        Iterator<Suggestion>  instance =(NewActiveSuggesionIter)DAOIteratorFactory.NewSuggesionIterator(false,newTime,null,page);
+        Iterator<Suggestion>  instance =(NewActiveSuggestionIter)DAOIteratorFactory.NewSuggesionIterator(false,newTime,null,page);
         Iterator<Suggestion> listIterator = itemList.iterator();
         int count=0;
         while(instance.hasNext()&&listIterator.hasNext()){
@@ -186,7 +186,7 @@ public class NewActiveSuggestionIterTest{
        }
         try{
             Pageable page=PageRequest.of(0, 1);
-            Iterator<Suggestion> instance =(FullActiveSuggesionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
+            Iterator<Suggestion> instance =(FullActiveSuggestionIter)DAOIteratorFactory.NewSuggesionIterator(true,null,null,page);
             instance.remove();
             fail("No exception was thrown");
         }

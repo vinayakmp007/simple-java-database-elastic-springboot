@@ -27,6 +27,8 @@ public class SuggestionDocument {
     private Timestamp dbLastUpdateDate;
   
     private Integer dbVersion;
+    
+    private Boolean dbdeleted;
 
     /**
      * @return the id
@@ -101,11 +103,12 @@ public class SuggestionDocument {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 89 * hash + Objects.hashCode(this.id);
-        hash = 89 * hash + Objects.hashCode(this.suggestion);
-        hash = 89 * hash + Objects.hashCode(this.dbCreationDate);
-        hash = 89 * hash + Objects.hashCode(this.dbLastUpdateDate);
-        hash = 89 * hash + Objects.hashCode(this.dbVersion);
+        hash = 11 * hash + Objects.hashCode(this.id);
+        hash = 11 * hash + Objects.hashCode(this.suggestion);
+        hash = 11 * hash + Objects.hashCode(this.dbCreationDate);
+        hash = 11 * hash + Objects.hashCode(this.dbLastUpdateDate);
+        hash = 11 * hash + Objects.hashCode(this.dbVersion);
+        hash = 11 * hash + Objects.hashCode(this.dbdeleted);
         return hash;
     }
 
@@ -136,7 +139,25 @@ public class SuggestionDocument {
         if (!Objects.equals(this.dbVersion, other.dbVersion)) {
             return false;
         }
+        if (!Objects.equals(this.dbdeleted, other.dbdeleted)) {
+            return false;
+        }
         return true;
+    }
+
+
+    /**
+     * @return the dbdeleted
+     */
+    public Boolean getDbdeleted() {
+        return dbdeleted;
+    }
+
+    /**
+     * @param dbdeleted the dbdeleted to set
+     */
+    public void setDbdeleted(Boolean dbdeleted) {
+        this.dbdeleted = dbdeleted;
     }
     
     
