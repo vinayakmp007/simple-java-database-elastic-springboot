@@ -22,11 +22,9 @@ protected Timestamp fromDate;
     public SuggestionDAO baseDAO;
     
     public NewInactiveSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
-      super();
+      super(initialPage);
       this.baseDAO=suggestionDAO;
       setFromDate(fromDate);
-      setSlice(daoFunction(initialPage));
-      applySlice();
     }
     @Override
     protected Slice daoFunction(Pageable nextPageable) {

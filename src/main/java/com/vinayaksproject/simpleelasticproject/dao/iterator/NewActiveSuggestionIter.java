@@ -22,11 +22,9 @@ public final class NewActiveSuggestionIter extends SliceIterator{
     public SuggestionDAO baseDAO;
     
     public NewActiveSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
-      super();
+      super(initialPage);
       this.baseDAO=suggestionDAO;
       setFromDate(fromDate);
-      setSlice(daoFunction(initialPage));
-      applySlice();
     }
     @Override
     protected Slice daoFunction(Pageable nextPageable) {

@@ -10,26 +10,23 @@ import com.vinayaksproject.simpleelasticproject.utils.SliceIterator;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-/**This gives an iterator to access all Suggestion elements
+/**
+ * This gives an iterator to access all Suggestion elements
  *
  * @author vinayak
  */
+public final class FullActiveSuggestionIter extends SliceIterator {
 
-public final class FullActiveSuggestionIter extends SliceIterator{
-    
     private SuggestionDAO suggestionDAO;
 
-    
-   
-    public FullActiveSuggestionIter(SuggestionDAO suggestionDAO,Pageable initialPage){
-      super();
-      this.suggestionDAO=suggestionDAO;
-      setSlice(daoFunction(initialPage));
-      applySlice();
+    public FullActiveSuggestionIter(SuggestionDAO suggestionDAO, Pageable initialPage) {
+        super(initialPage);
+        this.suggestionDAO = suggestionDAO;
     }
+
     @Override
     protected Slice daoFunction(Pageable nextPageable) {
-       return getSuggestionDAO().findByDeletedFalse(nextPageable);
+        return getSuggestionDAO().findByDeletedFalse(nextPageable);
     }
 
     /**
@@ -45,5 +42,5 @@ public final class FullActiveSuggestionIter extends SliceIterator{
     public void setSuggestionDAO(SuggestionDAO suggestionDAO) {
         this.suggestionDAO = suggestionDAO;
     }
-    
+
 }
