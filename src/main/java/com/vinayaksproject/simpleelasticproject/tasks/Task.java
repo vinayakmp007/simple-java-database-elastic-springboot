@@ -20,8 +20,18 @@ public abstract class Task implements Taskable{
  
     }
     
-    abstract protected void initialize();
+    @Override
+    public  void initialize()
+    {
+        
+    }
     
+    
+     @Override
+    public  void destroy()
+    {
+        
+    }
 
     /**
      * @return the paramsMap

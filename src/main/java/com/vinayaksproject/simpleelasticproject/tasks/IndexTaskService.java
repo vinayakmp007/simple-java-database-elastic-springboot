@@ -5,6 +5,7 @@
  */
 package com.vinayaksproject.simpleelasticproject.tasks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinayaksproject.simpleelasticproject.JobServerConfig;
 import com.vinayaksproject.simpleelasticproject.dao.IndexTaskDAO;
@@ -16,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -60,7 +63,12 @@ public class IndexTaskService implements TaskService {
 
     @Override
     public Task generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task) {
-        return taskFactory.NewIndexTask(task);
+        try {
+            return taskFactory.NewIndexTask(task);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(IndexTaskService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override

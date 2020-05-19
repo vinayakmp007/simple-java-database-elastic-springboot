@@ -10,6 +10,7 @@ import com.vinayaksproject.simpleelasticproject.dao.DAOIteratorFactory;
 import com.vinayaksproject.simpleelasticproject.dao.ElasticSuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
 import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
+import com.vinayaksproject.simpleelasticproject.enums.ParameterFieldNames;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskFailedException;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskSuccessfulException;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskTerminatedException;
@@ -22,58 +23,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 /**The task class for indexing operations
  *
  * @author vinayak
  */
-
 public final class IndexTask extends Task{
-    boolean fullActiveIndex;
-    Boolean instantIndex;
-    Boolean isCancellable;
-    Boolean isDeleted;
-    JobServerConfig jobDetails;
-    DAOIteratorFactory iterFactory;
-    Iterator<Suggestion> daoIterator;
-    Timestamp lastUpdateDate;
-    List<Integer> docIDs;
-    Pageable initialPage;
-    ElasticSuggestionDAO elasticDao;
-    private static final Logger LOG = Logger.getLogger(IndexTask.class.getName());
+    private Boolean fullActiveIndex;
+    private Boolean instantIndex;
+    private boolean cancellable;
+    private Boolean deleted;
+    private boolean initialized;
+    private JobServerConfig jobDetails;
+    private DAOIteratorFactory iterFactory;
+    private Iterator<Suggestion> daoIterator;
+    private Timestamp lastUpdateDate;
+    private List<Integer> docIDs;
+    private Pageable initialPage;
+    private ElasticSuggestionDAO elasticDao;
+    private static Logger LOG = Logger.getLogger(IndexTask.class.getName());
     
     public IndexTask(int taskid, Map paramsMap) {
         super(taskid, paramsMap);
-        initialize();
+         setInitialized(false);
     }
 
     @Override
-    protected void initialize() {
-        fullActiveIndex=true;
-        instantIndex=false;
-        isCancellable=false;
-        isDeleted=null;
-        lastUpdateDate=null;
-        docIDs=null;
-     if(getParamsMap().containsKey("lastIndexTime")){
-         fullActiveIndex=false;
-         lastUpdateDate=(Timestamp) getParamsMap().get("lastIndexTime");
+    public void initialize() {
+       
+        setFullActiveIndex(true);
+        setInstantIndex((Boolean) false);
+        setCancellable((Boolean) false);
+        setDeleted(null);
+        setLastUpdateDate(null);
+        setDocIDs(null);
+     if(getParamsMap().containsKey(ParameterFieldNames.lastIndexTime.getFieldName())){
+            setFullActiveIndex(false);
+            setLastUpdateDate(new Timestamp((long) getParamsMap().get(ParameterFieldNames.lastIndexTime.getFieldName())));
      }
-     if(getParamsMap().containsKey("suggestionids")){
-         instantIndex=true;
-         fullActiveIndex=false;
-         docIDs=(List<Integer>) getParamsMap().get("lastIndexTime");
+     if(getParamsMap().containsKey(ParameterFieldNames.suggestionids.getFieldName())){
+            setInstantIndex((Boolean) true);
+            setFullActiveIndex(false);
+            setDocIDs((List<Integer>) getParamsMap().get(ParameterFieldNames.suggestionids.getFieldName()));
      }
-     daoIterator = iterFactory.NewSuggesionIterator(isDeleted, lastUpdateDate, docIDs, initialPage);
-     if(LOG.isLoggable(Level.FINEST)){
-         LOG.log(Level.FINEST, "Created iterator of {0} for index job", daoIterator.getClass());
+        setDaoIterator((Iterator<Suggestion>) getIterFactory().NewSuggesionIterator(getDeleted(), getLastUpdateDate(), getDocIDs(), getInitialPage()));
+     if(getLOG().isLoggable(Level.FINEST)){
+            getLOG().log(Level.FINEST, "Created iterator of {0} for index job", getDaoIterator().getClass());
      }
+      setInitialized(true);
     }
 
     @Override
     public void start()  throws TaskTerminatedException{
+        if(!isInitialized())throw new TaskFailedException("The Task was not initialised before starting execution");
         try {
             doBulkIndex();
         } catch (Exception ex) {
@@ -88,22 +92,216 @@ public final class IndexTask extends Task{
     }
     
     void doBulkIndex() throws IOException{
-       if(LOG.isLoggable(Level.FINEST)){
-         LOG.log(Level.FINEST, "Bulk Operation started ");
+       if(getLOG().isLoggable(Level.FINEST)){
+            getLOG().log(Level.FINEST, "Bulk Operation started ");
      }    
         List<SuggestionDocument> list=new ArrayList();
-        while(daoIterator.hasNext()){
-            list.add(EntityConverter.SuggestionEntitytoDocument(daoIterator.next()));
-        if(list.size()>=jobDetails.getBulkDocCount()) {
-            elasticDao.bulkAPI(list);
+        while(getDaoIterator().hasNext()){
+            list.add(EntityConverter.SuggestionEntitytoDocument(getDaoIterator().next()));
+        if(list.size()>=getJobDetails().getBulkDocCount()) {
+                getElasticDao().bulkAPI(list);
             list.clear();
-        }   
+        }
+
             
         }
-    if(LOG.isLoggable(Level.FINEST)){
-         LOG.log(Level.FINEST, "Bulk Operation completed successfully");
+        if(list.size()>0){
+                getElasticDao().bulkAPI(list);
+            list.clear();
+        }
+    if( getLOG().isLoggable(Level.FINEST)){
+            getLOG().log(Level.FINEST, "Bulk Operation completed successfully");
      }     
     }
+
+    /**
+     * @return the fullActiveIndex
+     */
+    public Boolean getFullActiveIndex() {
+        return fullActiveIndex;
+    }
+
+    /**
+     * @param fullActiveIndex the fullActiveIndex to set
+     */
+    public void setFullActiveIndex(Boolean fullActiveIndex) {
+        this.fullActiveIndex = fullActiveIndex;
+    }
+
+    /**
+     * @return the instantIndex
+     */
+    public Boolean getInstantIndex() {
+        return instantIndex;
+    }
+
+    /**
+     * @param instantIndex the instantIndex to set
+     */
+    public void setInstantIndex(Boolean instantIndex) {
+        this.instantIndex = instantIndex;
+    }
+
+
+
+    /**
+     * @return the jobDetails
+     */
+    public JobServerConfig getJobDetails() {
+        return jobDetails;
+    }
+
+    /**
+     * @param jobDetails the jobDetails to set
+     */
+    @Autowired
+    public void setJobDetails(JobServerConfig jobDetails) {
+        this.jobDetails = jobDetails;
+    }
+
+    /**
+     * @return the iterFactory
+     */
+    public DAOIteratorFactory getIterFactory() {
+        return iterFactory;
+    }
+
+    /**
+     * @param iterFactory the iterFactory to set
+     */
+    @Autowired
+    public void setIterFactory(DAOIteratorFactory iterFactory) {
+        this.iterFactory = iterFactory;
+    }
+
+    /**
+     * @return the daoIterator
+     */
+    public Iterator<Suggestion> getDaoIterator() {
+        return daoIterator;
+    }
+
+    /**
+     * @param daoIterator the daoIterator to set
+     */
+    public void setDaoIterator(Iterator<Suggestion> daoIterator) {
+        this.daoIterator = daoIterator;
+    }
+
+    /**
+     * @return the lastUpdateDate
+     */
+    public Timestamp getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    /**
+     * @param lastUpdateDate the lastUpdateDate to set
+     */
+    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    /**
+     * @return the docIDs
+     */
+    public List<Integer> getDocIDs() {
+        return docIDs;
+    }
+
+    /**
+     * @param docIDs the docIDs to set
+     */
+    public void setDocIDs(List<Integer> docIDs) {
+        this.docIDs = docIDs;
+    }
+
+    /**
+     * @return the initialPage
+     */
+    public Pageable getInitialPage() {
+        return initialPage;
+    }
+
+    /**
+     * @param initialPage the initialPage to set
+     */
+    @Autowired
+    public void setInitialPage(Pageable initialPage) {
+        this.initialPage = initialPage;
+    }
+
+    /**
+     * @return the elasticDao
+     */
+    public ElasticSuggestionDAO getElasticDao() {
+        return elasticDao;
+    }
+
+    /**
+     * @param elasticDao the elasticDao to set
+     */
+   @Autowired
+    public void setElasticDao(ElasticSuggestionDAO elasticDao) {
+        this.elasticDao = elasticDao;
+    }
+
+    /**
+     * @return the LOG
+     */
+    public static Logger getLOG() {
+        return LOG;
+    }
+
+    /**
+     * @param aLOG the LOG to set
+     */
+    public static void setLOG(Logger aLOG) {
+        LOG = aLOG;
+    }
+
+    /**
+     * @return the cancellable
+     */
+    public boolean isCancellable() {
+        return cancellable;
+    }
+
+    /**
+     * @param cancellable the cancellable to set
+     */
+    public void setCancellable(boolean cancellable) {
+        this.cancellable = cancellable;
+    }
+
+    /**
+     * @return the initialized
+     */
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    /**
+     * @param initialized the initialized to set
+     */
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    /**
+     * @return the deleted
+     */
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    /**
+     * @param deleted the deleted to set
+     */
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
 
     
 }

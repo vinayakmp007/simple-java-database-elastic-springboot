@@ -89,8 +89,22 @@ public class JobServerConfig {
         this.bulkDocCount = bulkDocCount;
     }
 
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    @Bean
      public Pageable getInitialPage(){
-         return PageRequest.of(0, pageSize);
+         return PageRequest.of(0, getPageSize());
      }
+
+    /**
+     * @return the pageSize
+     */
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * @param pageSize the pageSize to set
+     */
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 }

@@ -14,7 +14,12 @@ import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskTerminatedE
  */
 public interface Taskable {
 
+    public void initialize() throws TaskTerminatedException;
+
+    public void destroy() throws TaskTerminatedException;
+
     public void start() throws TaskTerminatedException;
+
     public void cancel() throws TaskTerminatedException;
 
 }

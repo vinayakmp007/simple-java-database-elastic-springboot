@@ -9,12 +9,14 @@ package com.vinayaksproject.simpleelasticproject.tasks.exceptions;
  *
  * @author vinayak
  */
-public class TaskFailedException extends TaskTerminatedException{
+public class TaskFailedException extends TaskTerminatedException {
 
     public TaskFailedException(String message, Throwable cause) {
         super(message, cause);
     }
 
- 
+    public TaskFailedException(String message) {
+        super(message);
+    }
 
 }

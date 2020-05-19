@@ -36,6 +36,7 @@ com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData;
         indexTaskDAO.save(taskMetaData);
         try{
         started=true;
+        task.initialize();
         task.start();
         
         }
@@ -52,6 +53,7 @@ com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData;
             long stop = System.currentTimeMillis();
             executiontime=stop-start;
             indexTaskDAO.save(taskMetaData);
+            task.destroy();
         }
         
         return taskMetaData;
