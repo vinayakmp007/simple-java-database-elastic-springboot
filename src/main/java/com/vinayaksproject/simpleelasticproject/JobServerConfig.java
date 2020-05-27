@@ -20,12 +20,13 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("jobserver")
 public class JobServerConfig {
-  protected String name;
- private int threads;  
- private int bulkDocCount; 
- private int  bulkSize;
- private int  pageSize;
 
+    protected String name;
+    private int threads;
+    private int bulkDocCount;
+    private int bulkSize;
+    private int pageSize;
+    private int maxTasksToPoll;
     /**
      * @return the name
      */
@@ -90,9 +91,9 @@ public class JobServerConfig {
     }
 
     @Bean
-     public Pageable getInitialPage(){
-         return PageRequest.of(0, getPageSize());
-     }
+    public Pageable getInitialPage() {
+        return PageRequest.of(0, getPageSize());
+    }
 
     /**
      * @return the pageSize
@@ -106,5 +107,19 @@ public class JobServerConfig {
      */
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    /**
+     * @return the maxTasksToPoll
+     */
+    protected int getMaxTasksToPoll() {
+        return maxTasksToPoll;
+    }
+
+    /**
+     * @param maxTasksToPoll the maxTasksToPoll to set
+     */
+    protected void setMaxTasksToPoll(int maxTasksToPoll) {
+        this.maxTasksToPoll = maxTasksToPoll;
     }
 }

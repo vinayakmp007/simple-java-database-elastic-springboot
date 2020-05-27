@@ -15,18 +15,20 @@ import org.springframework.data.domain.Slice;
  *
  * @author vinayak
  */
-public final class NewSuggestionIter extends SliceIterator{
-private Timestamp fromDate;  
-private SuggestionDAO baseDAO;
-   public NewSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
-      super(initialPage);
-      this.baseDAO=suggestionDAO;
-      setFromDate(fromDate);
+public final class NewSuggestionIter extends SliceIterator {
+
+    private Timestamp fromDate;
+    private SuggestionDAO baseDAO;
+
+    public NewSuggestionIter(SuggestionDAO suggestionDAO, Timestamp fromDate, Pageable initialPage) {
+        super(initialPage);
+        this.baseDAO = suggestionDAO;
+        setFromDate(fromDate);
     }
 
     @Override
     protected Slice daoFunction(Pageable nextPageable) {
-     return getBaseDAO().findBylastUpdateDateAfter(getFromDate(),nextPageable);
+        return getBaseDAO().findBylastUpdateDateAfter(getFromDate(), nextPageable);
     }
 
     /**
@@ -56,6 +58,5 @@ private SuggestionDAO baseDAO;
     public void setBaseDAO(SuggestionDAO baseDAO) {
         this.baseDAO = baseDAO;
     }
-    
-    
+
 }

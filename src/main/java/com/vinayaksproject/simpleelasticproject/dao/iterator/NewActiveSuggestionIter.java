@@ -11,24 +11,26 @@ import java.sql.Timestamp;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-/**This gives an iterator to access all Suggestion elements
+/**
+ * This gives an iterator to access all Suggestion elements
  *
  * @author vinayak
  */
+public final class NewActiveSuggestionIter extends SliceIterator {
 
-public final class NewActiveSuggestionIter extends SliceIterator{
     protected Timestamp fromDate;
-    
+
     public SuggestionDAO baseDAO;
-    
-    public NewActiveSuggestionIter(SuggestionDAO suggestionDAO,Timestamp fromDate,Pageable initialPage){
-      super(initialPage);
-      this.baseDAO=suggestionDAO;
-      setFromDate(fromDate);
+
+    public NewActiveSuggestionIter(SuggestionDAO suggestionDAO, Timestamp fromDate, Pageable initialPage) {
+        super(initialPage);
+        this.baseDAO = suggestionDAO;
+        setFromDate(fromDate);
     }
+
     @Override
     protected Slice daoFunction(Pageable nextPageable) {
-       return getBaseDAO().findBylastUpdateDateAfterAndDeletedFalse(getFromDate(),nextPageable);
+        return getBaseDAO().findBylastUpdateDateAfterAndDeletedFalse(getFromDate(), nextPageable);
     }
 
     /**
@@ -58,5 +60,5 @@ public final class NewActiveSuggestionIter extends SliceIterator{
     public void setFromDate(Timestamp fromDate) {
         this.fromDate = fromDate;
     }
-    
+
 }

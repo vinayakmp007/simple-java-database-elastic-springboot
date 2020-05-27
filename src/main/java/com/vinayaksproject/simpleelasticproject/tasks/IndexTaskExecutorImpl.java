@@ -11,22 +11,25 @@ import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskSuccessfulE
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**This is an implementation class for IndexTaskExecutor
+/**
+ * This is an implementation class for IndexTaskExecutor
  *
  * @author vinayak
  */
 public class IndexTaskExecutorImpl implements IndexTaskExecutor {
-@Autowired
-IndexTaskDAO indexTaskDAO;
-Taskable task;
-private boolean started;
-private long executiontime;
-com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData;
-    public  IndexTaskExecutorImpl(Taskable task, com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData) {
-     this.task=task;
-     this.taskMetaData=taskMetaData;
-     started=false;
-        
+
+    @Autowired
+    IndexTaskDAO indexTaskDAO;
+    Taskable task;
+    private boolean started;
+    private long executiontime;
+    com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData;
+
+    public IndexTaskExecutorImpl(Taskable task, com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData) {
+        this.task = task;
+        this.taskMetaData = taskMetaData;
+        started = false;
+
     }
 
     @Override
@@ -34,38 +37,31 @@ com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData;
         taskMetaData.setStartTime(new Timestamp(System.currentTimeMillis()));
         long start = System.currentTimeMillis();
         indexTaskDAO.save(taskMetaData);
-        try{
-        started=true;
-        task.initialize();
-        task.start();
-        
-        }
-        catch(TaskSuccessfulException ex){
-           taskMetaData.setStatus(JobStatus.SUCCESSFUL);
+        try {
+            started = true;
+            task.initialize();
+            task.start();
+
+        } catch (TaskSuccessfulException ex) {
+            taskMetaData.setStatus(JobStatus.SUCCESSFUL);
             taskMetaData.setDetails(ex.getLocalizedMessage());
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             taskMetaData.setStatus(JobStatus.FAILED);
             taskMetaData.setDetails(ex.getLocalizedMessage());
-        }
-        finally{
+        } finally {
             taskMetaData.setEndTime(new Timestamp(System.currentTimeMillis()));
             long stop = System.currentTimeMillis();
-            executiontime=stop-start;
+            executiontime = stop - start;
             indexTaskDAO.save(taskMetaData);
             task.destroy();
         }
-        
+
         return taskMetaData;
     }
-
 
     @Override
     public long getExecutionTime() {
         return executiontime;
     }
-    
 
-  
-    
 }

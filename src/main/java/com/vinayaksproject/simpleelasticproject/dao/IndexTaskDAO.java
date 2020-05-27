@@ -22,18 +22,17 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IndexTaskDAO extends CrudRepository<IndexTaskEntry, Integer> {
-   List<IndexTaskEntry> findByStatus(JobStatus statusm,Pageable page);
+
+    List<IndexTaskEntry> findByStatus(JobStatus statusm, Pageable page);
+
     @Modifying
     @Query("DELETE FROM indextask")
     @Transactional
     public void deleteAllInSingleQuery();
-    
+
     @Modifying
     @Query("update indextask set version=version+1,serverName=:serverName   where id=:taskId and status=:status")
     @Transactional
-    public void lockTaskforServer(String serverName,Integer taskId,JobStatus status);
-   
-    
-    
-    
+    public void lockTaskforServer(String serverName, Integer taskId, JobStatus status);
+
 }

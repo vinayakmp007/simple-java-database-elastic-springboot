@@ -21,31 +21,32 @@ import javax.persistence.Table;
  *
  * @author vinayak
  */
-@Entity(name="indextask")
-@Table(name="indextask")
-public class IndexTaskEntry extends EntityAudit{
-     @Id
+@Entity(name = "indextask")
+@Table(name = "indextask")
+public class IndexTaskEntry extends EntityAudit {
+
+    @Id
     @GeneratedValue
     private int id;
     @Enumerated(EnumType.STRING)
-    @Column(nullable=false)
+    @Column(nullable = false)
     private IndexJobType taskType;
-    
+
     @Enumerated(EnumType.STRING)
-    private JobStatus status=JobStatus.CREATED;
+    private JobStatus status = JobStatus.CREATED;
 
     private Timestamp startTime;
 
     private Timestamp endTime;
-    @Lob 
-    @Column(length=5000)
+    @Lob
+    @Column(length = 5000)
     private String details;
-    @Lob 
-    @Column(length=2000)
+    @Lob
+    @Column(length = 2000)
     private String parameters;
 
-    
     private String serverName;
+
     /**
      * @return the id
      */
@@ -157,7 +158,30 @@ public class IndexTaskEntry extends EntityAudit{
     public void setServerName(String serverName) {
         this.serverName = serverName;
     }
-    
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final IndexTaskEntry other = (IndexTaskEntry) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
+
 }
-  

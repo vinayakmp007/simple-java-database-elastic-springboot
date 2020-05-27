@@ -11,18 +11,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 /**
  * This is the entity class to store the suggestions
+ *
  * @author vinayak
  */
-@Entity(name="suggestion")
-@Table(name="suggestion")
+@Entity(name = "suggestion")
+@Table(name = "suggestion")
 public class Suggestion extends EntityAudit {
+
     @Id
     @GeneratedValue
     private int id;
-    
+
     private String suggestion;
 
     private int hits;
@@ -100,7 +101,7 @@ public class Suggestion extends EntityAudit {
 
     @Override
     public String toString() {
-        return "Suggestion{" + "id=" + id + ", suggestion=" + suggestion + ", hits=" + hits +",lastupdatedate="+ this.lastUpdateDate+'}';
+        return "Suggestion{" + "id=" + id + ", suggestion=" + suggestion + ", hits=" + hits + ",lastupdatedate=" + this.lastUpdateDate + '}';
     }
-    
+
 }

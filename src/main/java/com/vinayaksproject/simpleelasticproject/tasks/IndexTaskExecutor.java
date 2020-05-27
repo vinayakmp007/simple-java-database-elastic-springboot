@@ -11,8 +11,8 @@ import java.util.concurrent.Callable;
  *
  * @author vinayak
  */
-public interface IndexTaskExecutor extends Callable{
+public interface IndexTaskExecutor extends Callable {
 
     public long getExecutionTime();
-    
+
 }

@@ -15,6 +15,6 @@ public enum JobStatus {
     CANCELLING,
     CANCELLED,
     FAILED,
-    SUCCESSFUL    
-    
+    SUCCESSFUL
+
 }

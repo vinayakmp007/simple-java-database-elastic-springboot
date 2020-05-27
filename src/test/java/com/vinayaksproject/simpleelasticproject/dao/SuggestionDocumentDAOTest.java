@@ -28,12 +28,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  *
  * @author vinayak
  */
 @SpringBootTest
+@ActiveProfiles("test")
 public class SuggestionDocumentDAOTest {
 
     @Autowired
@@ -127,7 +129,7 @@ public class SuggestionDocumentDAOTest {
         assertEquals(document.getId(), id);
         assertEquals("One", id);
         document.setId(null);
-                try {
+        try {
             ElasticSuggestionDAO.save(document);
             fail("No exception was thrown");
         } catch (Exception ex) {
@@ -140,7 +142,7 @@ public class SuggestionDocumentDAOTest {
     public void testBulkAPIandMultiGet() {
         List<SuggestionDocument> itemList = new ArrayList();
         final List idList = new ArrayList<String>();
-        List<SuggestionDocument>  documentList = null;
+        List<SuggestionDocument> documentList = null;
         for (int i = 0; i < 2500; i++) {
             SuggestionDocument temp = new SuggestionDocument();
             temp.setSuggestion("Suggestion" + i);
@@ -152,62 +154,61 @@ public class SuggestionDocumentDAOTest {
             itemList.add(temp);
         }
         try {
-          ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.CREATE);
-          documentList=ElasticSuggestionDAO.get(idList);
-          assertNotNull(documentList);
-          assertEquals(2500,documentList.size());
+            ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.CREATE);
+            documentList = ElasticSuggestionDAO.get(idList);
+            assertNotNull(documentList);
+            assertEquals(2500, documentList.size());
             Map<String, SuggestionDocument> map = (Map<String, SuggestionDocument>) itemList.stream().collect(
-                Collectors.toMap(x->x.getId(), x->x));
-          for(SuggestionDocument temp:documentList){
-              assertTrue(map.containsKey(temp.getId()));
-              assertEquals(map.get(temp.getId()),temp);
-          }
+                    Collectors.toMap(x -> x.getId(), x -> x));
+            for (SuggestionDocument temp : documentList) {
+                assertTrue(map.containsKey(temp.getId()));
+                assertEquals(map.get(temp.getId()), temp);
+            }
         } catch (IOException ex) {
             Logger.getLogger(SuggestionDocumentDAOTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("Exception was thrown" + ex);
         }
-        
+
         //check update requests
-        for(SuggestionDocument temp:itemList){
+        for (SuggestionDocument temp : itemList) {
             temp.setDbLastUpdateDate(new Timestamp(System.currentTimeMillis()));
-            temp.setSuggestion(temp.getSuggestion()+"Test");
+            temp.setSuggestion(temp.getSuggestion() + "Test");
         }
-        
-        
-                try {
-          ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.UPDATE);
-          documentList=ElasticSuggestionDAO.get(idList);
-          assertNotNull(documentList);
-          assertEquals(2500,documentList.size());
+
+        try {
+            ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.UPDATE);
+            documentList = ElasticSuggestionDAO.get(idList);
+            assertNotNull(documentList);
+            assertEquals(2500, documentList.size());
             Map<String, SuggestionDocument> map = (Map<String, SuggestionDocument>) itemList.stream().collect(
-                Collectors.toMap(x->x.getId(), x->x));
-          for(SuggestionDocument temp:documentList){
-              assertTrue(map.containsKey(temp.getId()));
-              assertEquals(map.get(temp.getId()),temp);
-          }
+                    Collectors.toMap(x -> x.getId(), x -> x));
+            for (SuggestionDocument temp : documentList) {
+                assertTrue(map.containsKey(temp.getId()));
+                assertEquals(map.get(temp.getId()), temp);
+            }
         } catch (Exception ex) {
             Logger.getLogger(SuggestionDocumentDAOTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("Exception was thrown" + ex);
         }
-                
-                //verfy bulkdelete
-          List<SuggestionDocument> deletedList = itemList.subList(0, 800);
-         itemList=itemList.subList(800,2500); 
-                  try {
-          ElasticSuggestionDAO.bulkAPI(deletedList, IndexOperations.DELETE);
-          documentList=ElasticSuggestionDAO.get(idList);
-          assertNotNull(documentList);
-          documentList= documentList.stream().filter(x->x!=null).collect(Collectors.toList());//null will be returned with deleted ids
-          assertEquals(itemList.size(),documentList.size());
+
+        //verfy bulkdelete
+        List<SuggestionDocument> deletedList = itemList.subList(0, 800);
+        itemList = itemList.subList(800, 2500);
+        try {
+            ElasticSuggestionDAO.bulkAPI(deletedList, IndexOperations.DELETE);
+            documentList = ElasticSuggestionDAO.get(idList);
+            assertNotNull(documentList);
+            documentList = documentList.stream().filter(x -> x != null).collect(Collectors.toList());//null will be returned with deleted ids
+            assertEquals(itemList.size(), documentList.size());
             Map<String, SuggestionDocument> map = (Map<String, SuggestionDocument>) itemList.stream().collect(
-                Collectors.toMap(x->x.getId(), x->x));
-          for(SuggestionDocument temp:documentList){
-              assertTrue(map.containsKey(temp.getId()));
-              assertEquals(map.get(temp.getId()),temp);
-          }
+                    Collectors.toMap(x -> x.getId(), x -> x));
+            for (SuggestionDocument temp : documentList) {
+                assertTrue(map.containsKey(temp.getId()));
+                assertEquals(map.get(temp.getId()), temp);
+            }
         } catch (IOException ex) {
             Logger.getLogger(SuggestionDocumentDAOTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("Exception was thrown" + ex);
-        }     
+        }
     }
 }

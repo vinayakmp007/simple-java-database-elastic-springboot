@@ -11,24 +11,26 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-/**This gives an iterator to access all Suggestion elements
+/**
+ * This gives an iterator to access all Suggestion elements
  *
  * @author vinayak
  */
+public final class NewListSuggestionIter extends SliceIterator {
 
-public final class NewListSuggestionIter extends SliceIterator{
- protected List<Integer> newList;   
- 
+    protected List<Integer> newList;
+
     public SuggestionDAO baseDAO;
-    
-    public NewListSuggestionIter(SuggestionDAO suggestionDAO,List<Integer> newList,Pageable initialPage){
-      super(initialPage);
-      this.baseDAO=suggestionDAO;
-      this.newList=newList;
+
+    public NewListSuggestionIter(SuggestionDAO suggestionDAO, List<Integer> newList, Pageable initialPage) {
+        super(initialPage);
+        this.baseDAO = suggestionDAO;
+        this.newList = newList;
     }
+
     @Override
     protected Slice daoFunction(Pageable nextPageable) {
-       return getBaseDAO().findByIdIn(getNewList(),nextPageable);
+        return getBaseDAO().findByIdIn(getNewList(), nextPageable);
     }
 
     /**
@@ -58,5 +60,5 @@ public final class NewListSuggestionIter extends SliceIterator{
     public void setNewList(List<Integer> newList) {
         this.newList = newList;
     }
-    
+
 }

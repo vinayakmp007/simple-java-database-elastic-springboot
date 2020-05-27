@@ -9,7 +9,7 @@ package com.vinayaksproject.simpleelasticproject.tasks.exceptions;
  *
  * @author vinayak
  */
-public class TaskSuccessfulException extends TaskTerminatedException{
+public class TaskSuccessfulException extends TaskTerminatedException {
 
     public TaskSuccessfulException(String message, Throwable cause) {
         super(message, cause);
@@ -19,5 +19,4 @@ public class TaskSuccessfulException extends TaskTerminatedException{
         super(message);
     }
 
-    
 }

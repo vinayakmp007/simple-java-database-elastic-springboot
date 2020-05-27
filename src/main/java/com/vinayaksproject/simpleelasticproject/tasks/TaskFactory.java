@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
  */
 @Configuration
 public class TaskFactory {
+
     @Autowired
     ObjectMapper defaultObjectMapper;
     @Autowired
@@ -35,13 +36,13 @@ public class TaskFactory {
     DAOIteratorFactory iterFactory;
     @Autowired
     JobServerConfig jobDetails;
-    
+
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public IndexTask NewIndexTask(IndexTaskEntry taskMetaData) throws JsonProcessingException {
         Map paramsMap = defaultObjectMapper.readValue(taskMetaData.getParameters(), Map.class);
-       IndexTask task=new IndexTask(taskMetaData.getId(), paramsMap);
-         return task; 
+        IndexTask task = new IndexTask(taskMetaData.getId(), paramsMap);
+        return task;
     }
 
     @Bean

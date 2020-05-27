@@ -39,12 +39,14 @@ import static org.mockito.Mockito.verify;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  *
  * @author vinayak
  */
 @SpringBootTest
+@ActiveProfiles("test")
 public class IndexTaskTest {
 
     int taskno = 0;
@@ -52,17 +54,15 @@ public class IndexTaskTest {
     TaskFactory factory;
     @Autowired
     ObjectMapper defaultObjectMapper;
-    
-    @Mock 
+
+    @Mock
     SuggestionDAO suggestionDAO;
-    
-      @Mock 
+
+    @Mock
     JobServerConfig jobConfig;
-    
+
     @Mock
     ElasticSuggestionDAO elasticDAO;
-
-    
 
     public IndexTaskTest() {
     }
@@ -77,8 +77,8 @@ public class IndexTaskTest {
 
     @BeforeEach
     public void setUp() throws JsonProcessingException {
-      MockitoAnnotations.initMocks(this); 
-        
+        MockitoAnnotations.initMocks(this);
+
     }
 
     @AfterEach
@@ -114,14 +114,14 @@ public class IndexTaskTest {
         id.add(2);
         id.add(3);
         map.put(ParameterFieldNames.suggestionids, id);
-        IndexTask task= null;
+        IndexTask task = null;
         try {
             taskEntry.setParameters(defaultObjectMapper.writeValueAsString(map));
-           task = factory.NewIndexTask(taskEntry);
+            task = factory.NewIndexTask(taskEntry);
         } catch (JsonProcessingException ex) {
             fail("Parse exception occured");
         }
-        
+
         return task;
     }
 
@@ -130,28 +130,30 @@ public class IndexTaskTest {
         IndexTaskEntry taskEntry = new IndexTaskEntry();
         taskEntry.setId(taskno++);
         Map map = new HashMap();
-         IndexTask task= null;
+        IndexTask task = null;
         try {
             taskEntry.setParameters(defaultObjectMapper.writeValueAsString(map));
             task = factory.NewIndexTask(taskEntry);
         } catch (JsonProcessingException ex) {
             fail("Parse exception occured");
         }
-        
+
         return task;
     }
-    IndexTaskEntry  getNewTaskEntry(String map){
-       IndexTaskEntry taskEntry = new IndexTaskEntry();
+
+    IndexTaskEntry getNewTaskEntry(String map) {
+        IndexTaskEntry taskEntry = new IndexTaskEntry();
         taskEntry.setId(taskno++);
         taskEntry.setParameters(map);
         return taskEntry;
     }
+
     IndexTask createUpdateIndexTask() throws JsonProcessingException {
 
         IndexTaskEntry taskEntry = new IndexTaskEntry();
         taskEntry.setId(taskno++);
         Map map = new HashMap();
-        IndexTask task  =null;
+        IndexTask task = null;
         map.put(ParameterFieldNames.lastIndexTime, new Timestamp(System.currentTimeMillis()));
         try {
             taskEntry.setParameters(defaultObjectMapper.writeValueAsString(map));
@@ -159,7 +161,7 @@ public class IndexTaskTest {
         } catch (JsonProcessingException ex) {
             fail("PArse failed");
         }
-       
+
         return task;
     }
 
@@ -170,14 +172,14 @@ public class IndexTaskTest {
      */
     @Test
     public void testStart() throws JsonProcessingException, IOException {
-           IndexTask task1 = createSuggestionIdTAsk();
-       
+        IndexTask task1 = createSuggestionIdTAsk();
+
         IndexTask task2 = createFullIndexTask();
         task2.initialize();
-       
+
         IndexTask task3 = createUpdateIndexTask();
         task3.initialize();
-        
+
         try {
             task1.start();
             fail("Exception was not thrown");
@@ -193,8 +195,8 @@ public class IndexTaskTest {
             System.out.println(ex);
             assertTrue(ex instanceof TaskSuccessfulException);
         }
-      try {
-          task2.initialize();
+        try {
+            task2.initialize();
             task2.start();
             fail("Exception was not thrown");
         } catch (Exception ex) {
@@ -209,34 +211,33 @@ public class IndexTaskTest {
 
             assertTrue(ex instanceof TaskSuccessfulException);
         }
-         task1.initialize();
+        task1.initialize();
         task1.setElasticDao(elasticDAO);
         task1.setJobDetails(jobConfig);
-        List list =new ArrayList();
-        for(int i=0;i<1000;i++){
-         Suggestion temp = new Suggestion();
+        List list = new ArrayList();
+        for (int i = 0; i < 1000; i++) {
+            Suggestion temp = new Suggestion();
             temp.setSuggestion("Suggestion" + i);
             temp.setDeleted(false);
             list.add(temp);
         }
-        
-        int totalHits=0;
-        for(int maxCount=1;maxCount<100;maxCount++){
-        when(jobConfig.getBulkDocCount()).thenReturn(maxCount);
-        task1.setDaoIterator(list.iterator());
-        doNothing().when(elasticDAO).bulkAPI(isA(List.class));
-        try {
-           
-        task1.start();
-        }
-        catch (Exception ex) {
 
-            assertTrue(ex instanceof TaskSuccessfulException);
+        int totalHits = 0;
+        for (int maxCount = 1; maxCount < 100; maxCount++) {
+            when(jobConfig.getBulkDocCount()).thenReturn(maxCount);
+            task1.setDaoIterator(list.iterator());
+            doNothing().when(elasticDAO).bulkAPI(isA(List.class));
+            try {
+
+                task1.start();
+            } catch (Exception ex) {
+
+                assertTrue(ex instanceof TaskSuccessfulException);
+            }
+            totalHits += list.size() / maxCount + ((list.size() % maxCount == 0) ? 0 : 1);
+            verify(elasticDAO, times(totalHits)).bulkAPI(isA(List.class));
         }
-        totalHits+=list.size()/maxCount+ ((list.size()%maxCount==0)?0:1);
-       verify(elasticDAO, times(totalHits)).bulkAPI(isA(List.class));
-        }
-        
+
     }
 
 //    /**
@@ -250,6 +251,4 @@ public class IndexTaskTest {
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
-
-
 }

@@ -10,24 +10,25 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import javax.persistence.Id;
 
-/**This is the document that will be stored in the elastic search.
+/**
+ * This is the document that will be stored in the elastic search.
  *
  * @author vinayak
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SuggestionDocument {
-      @Id
+
+    @Id
     private String id;
-    
+
     private String suggestion;
 
-    
     private Timestamp dbCreationDate;
- 
+
     private Timestamp dbLastUpdateDate;
-  
+
     private Integer dbVersion;
-    
+
     private Boolean dbdeleted;
 
     /**
@@ -145,7 +146,6 @@ public class SuggestionDocument {
         return true;
     }
 
-
     /**
      * @return the dbdeleted
      */
@@ -159,7 +159,5 @@ public class SuggestionDocument {
     public void setDbdeleted(Boolean dbdeleted) {
         this.dbdeleted = dbdeleted;
     }
-    
-    
-    
+
 }

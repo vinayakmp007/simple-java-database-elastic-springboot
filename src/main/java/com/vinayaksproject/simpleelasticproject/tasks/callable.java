@@ -10,5 +10,5 @@ package com.vinayaksproject.simpleelasticproject.tasks;
  * @author vinayak
  */
 interface callable {
-    
+
 }

@@ -7,43 +7,43 @@ package com.vinayaksproject.simpleelasticproject.tasks;
 
 import java.util.Map;
 
-/**The base Task class
+/**
+ * The base Task class
  *
  * @author vinayak
  */
-public abstract class Task implements Taskable{
-    private Map<String,Object> paramsMap;
+public abstract class Task implements Taskable {
+
+    private Map<String, Object> paramsMap;
     private final int taskid;
-    Task(int taskid,Map paramsMap){
-     this.taskid=taskid;   
-     this.paramsMap=paramsMap;
- 
+
+    Task(int taskid, Map paramsMap) {
+        this.taskid = taskid;
+        this.paramsMap = paramsMap;
+
     }
-    
+
     @Override
-    public  void initialize()
-    {
-        
+    public void initialize() {
+
     }
-    
-    
-     @Override
-    public  void destroy()
-    {
-        
+
+    @Override
+    public void destroy() {
+
     }
 
     /**
      * @return the paramsMap
      */
-    public Map<String,Object> getParamsMap() {
+    public Map<String, Object> getParamsMap() {
         return paramsMap;
     }
 
     /**
      * @param paramsMap the paramsMap to set
      */
-    public void setParamsMap(Map<String,Object> paramsMap) {
+    public void setParamsMap(Map<String, Object> paramsMap) {
         this.paramsMap = paramsMap;
     }
 
@@ -53,5 +53,5 @@ public abstract class Task implements Taskable{
     public int getTaskid() {
         return taskid;
     }
-    
+
 }

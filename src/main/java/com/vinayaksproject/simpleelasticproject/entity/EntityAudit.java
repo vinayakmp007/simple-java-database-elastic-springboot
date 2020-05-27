@@ -15,24 +15,26 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
- *This is abstract class to update created and last modified date for all entities
- * inheriting this class class will date audit fields and will automatically
- * updated when these entities are persisted into the database.
+ * This is abstract class to update created and last modified date for all
+ * entities inheriting this class class will date audit fields and will
+ * automatically updated when these entities are persisted into the database.
+ *
  * @author vinayak
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 
 public abstract class EntityAudit implements Serializable {
+
     @CreationTimestamp
     protected Timestamp creationDate;
     @UpdateTimestamp
     protected Timestamp lastUpdateDate;
-    
-    
+
     protected boolean deleted;
     @Version
     protected Integer version;
+
     /**
      * @return the creationDate
      */
@@ -88,5 +90,5 @@ public abstract class EntityAudit implements Serializable {
     public void setVersion(Integer version) {
         this.version = version;
     }
-    
+
 }

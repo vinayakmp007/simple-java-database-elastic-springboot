@@ -40,7 +40,7 @@ public class RequestFactory {
                     actionRequest = new IndexRequest(elasticConfig.getEsIndexName());
                     break;
                 case UPDATE:
-                    actionRequest = new UpdateRequest().index(elasticConfig.getEsIndexName());                   
+                    actionRequest = new UpdateRequest().index(elasticConfig.getEsIndexName());
                     break;
                 case DELETE:
                     actionRequest = new DeleteRequest(elasticConfig.getEsIndexName());
@@ -64,6 +64,6 @@ public class RequestFactory {
     @Bean(autowireCandidate = false)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MultiGetRequest.Item newMultiGetRequestItem(String id) {
-        return new MultiGetRequest.Item(elasticConfig.getEsIndexName(),id);
+        return new MultiGetRequest.Item(elasticConfig.getEsIndexName(), id);
     }
 }

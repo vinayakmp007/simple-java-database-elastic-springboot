@@ -41,7 +41,7 @@ public abstract class SliceIterator implements Iterator {
         if (initialized == false) {
             setSlice(daoFunction(initialPage));
             applySlice();
-            initialized=true;
+            initialized = true;
         }
         if (getIterator() != null) {
 

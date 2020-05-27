@@ -24,12 +24,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  *
  * @author vinayak
  */
 @SpringBootTest
+@ActiveProfiles("test")
 public class NewSuggestionIteratorTest {
 
     @Autowired
@@ -115,7 +117,7 @@ public class NewSuggestionIteratorTest {
 
     @AfterEach
     public void tearDown() {
-         suggestionDAO.deleteAllInSingleQuery();
+        suggestionDAO.deleteAllInSingleQuery();
         itemList = null;
     }
 

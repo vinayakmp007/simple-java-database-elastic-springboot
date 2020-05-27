@@ -26,11 +26,13 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 
-/**The task class for indexing operations
+/**
+ * The task class for indexing operations
  *
  * @author vinayak
  */
-public final class IndexTask extends Task{
+public final class IndexTask extends Task {
+
     private Boolean fullActiveIndex;
     private Boolean instantIndex;
     private boolean cancellable;
@@ -44,44 +46,46 @@ public final class IndexTask extends Task{
     private Pageable initialPage;
     private ElasticSuggestionDAO elasticDao;
     private static Logger LOG = Logger.getLogger(IndexTask.class.getName());
-    
+
     public IndexTask(int taskid, Map paramsMap) {
         super(taskid, paramsMap);
-         setInitialized(false);
+        setInitialized(false);
     }
 
     @Override
     public void initialize() {
-       
+
         setFullActiveIndex(true);
         setInstantIndex((Boolean) false);
         setCancellable((Boolean) false);
         setDeleted(null);
         setLastUpdateDate(null);
         setDocIDs(null);
-     if(getParamsMap().containsKey(ParameterFieldNames.lastIndexTime.getFieldName())){
+        if (getParamsMap().containsKey(ParameterFieldNames.lastIndexTime.getFieldName())) {
             setFullActiveIndex(false);
             setLastUpdateDate(new Timestamp((long) getParamsMap().get(ParameterFieldNames.lastIndexTime.getFieldName())));
-     }
-     if(getParamsMap().containsKey(ParameterFieldNames.suggestionids.getFieldName())){
+        }
+        if (getParamsMap().containsKey(ParameterFieldNames.suggestionids.getFieldName())) {
             setInstantIndex((Boolean) true);
             setFullActiveIndex(false);
             setDocIDs((List<Integer>) getParamsMap().get(ParameterFieldNames.suggestionids.getFieldName()));
-     }
+        }
         setDaoIterator((Iterator<Suggestion>) getIterFactory().NewSuggesionIterator(getDeleted(), getLastUpdateDate(), getDocIDs(), getInitialPage()));
-     if(getLOG().isLoggable(Level.FINEST)){
+        if (getLOG().isLoggable(Level.FINEST)) {
             getLOG().log(Level.FINEST, "Created iterator of {0} for index job", getDaoIterator().getClass());
-     }
-      setInitialized(true);
+        }
+        setInitialized(true);
     }
 
     @Override
-    public void start()  throws TaskTerminatedException{
-        if(!isInitialized())throw new TaskFailedException("The Task was not initialised before starting execution");
+    public void start() throws TaskTerminatedException {
+        if (!isInitialized()) {
+            throw new TaskFailedException("The Task was not initialised before starting execution");
+        }
         try {
             doBulkIndex();
         } catch (Exception ex) {
-            throw new TaskFailedException("The bulk index operation failed of the index task",ex);
+            throw new TaskFailedException("The bulk index operation failed of the index task", ex);
         }
         throw new TaskSuccessfulException("The bulk index operation was successful for the index task");
     }
@@ -90,28 +94,27 @@ public final class IndexTask extends Task{
     public void cancel() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    void doBulkIndex() throws IOException{
-       if(getLOG().isLoggable(Level.FINEST)){
-            getLOG().log(Level.FINEST, "Bulk Operation started ");
-     }    
-        List<SuggestionDocument> list=new ArrayList();
-        while(getDaoIterator().hasNext()){
-            list.add(EntityConverter.SuggestionEntitytoDocument(getDaoIterator().next()));
-        if(list.size()>=getJobDetails().getBulkDocCount()) {
-                getElasticDao().bulkAPI(list);
-            list.clear();
-        }
 
-            
+    void doBulkIndex() throws IOException {
+        if (getLOG().isLoggable(Level.FINEST)) {
+            getLOG().log(Level.FINEST, "Bulk Operation started ");
         }
-        if(list.size()>0){
+        List<SuggestionDocument> list = new ArrayList();
+        while (getDaoIterator().hasNext()) {
+            list.add(EntityConverter.SuggestionEntitytoDocument(getDaoIterator().next()));
+            if (list.size() >= getJobDetails().getBulkDocCount()) {
                 getElasticDao().bulkAPI(list);
+                list.clear();
+            }
+
+        }
+        if (list.size() > 0) {
+            getElasticDao().bulkAPI(list);
             list.clear();
         }
-    if( getLOG().isLoggable(Level.FINEST)){
+        if (getLOG().isLoggable(Level.FINEST)) {
             getLOG().log(Level.FINEST, "Bulk Operation completed successfully");
-     }     
+        }
     }
 
     /**
@@ -141,8 +144,6 @@ public final class IndexTask extends Task{
     public void setInstantIndex(Boolean instantIndex) {
         this.instantIndex = instantIndex;
     }
-
-
 
     /**
      * @return the jobDetails
@@ -241,7 +242,7 @@ public final class IndexTask extends Task{
     /**
      * @param elasticDao the elasticDao to set
      */
-   @Autowired
+    @Autowired
     public void setElasticDao(ElasticSuggestionDAO elasticDao) {
         this.elasticDao = elasticDao;
     }
@@ -302,6 +303,4 @@ public final class IndexTask extends Task{
         this.deleted = deleted;
     }
 
-
-    
 }

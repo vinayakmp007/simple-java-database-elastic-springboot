@@ -16,5 +16,5 @@ public enum IndexOperations {
     GET,
     BULK,
     MULTI
-    
+
 }

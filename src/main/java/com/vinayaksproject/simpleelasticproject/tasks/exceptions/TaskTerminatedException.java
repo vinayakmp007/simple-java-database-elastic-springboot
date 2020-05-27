@@ -9,7 +9,7 @@ package com.vinayaksproject.simpleelasticproject.tasks.exceptions;
  *
  * @author vinayak
  */
-public abstract class TaskTerminatedException extends RuntimeException{
+public abstract class TaskTerminatedException extends RuntimeException {
 
     public TaskTerminatedException(String message, Throwable cause) {
         super(message, cause);
@@ -19,7 +19,4 @@ public abstract class TaskTerminatedException extends RuntimeException{
         super(message);
     }
 
-  
-  
-    
 }

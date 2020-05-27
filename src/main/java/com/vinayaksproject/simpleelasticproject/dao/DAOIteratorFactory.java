@@ -26,32 +26,29 @@ import org.springframework.data.domain.Pageable;
  */
 @Configuration
 public class DAOIteratorFactory {
+
     @Autowired
     SuggestionDAO suggestionDAO;
 
-    @Bean(autowireCandidate = false) 
+    @Bean(autowireCandidate = false)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public SliceIterator NewSuggesionIterator(Boolean isDeleted,Timestamp startDate,List<Integer> itemIds,Pageable initialPage){
-      SliceIterator iterator=null;
-        if(itemIds!=null){
-            iterator= new NewListSuggestionIter(suggestionDAO,itemIds,initialPage);
-        }
-        else if(startDate!=null&&isDeleted!=null){
-            if(isDeleted){
-               iterator=  new NewInactiveSuggestionIter(suggestionDAO,startDate,initialPage);
+    public SliceIterator NewSuggesionIterator(Boolean isDeleted, Timestamp startDate, List<Integer> itemIds, Pageable initialPage) {
+        SliceIterator iterator = null;
+        if (itemIds != null) {
+            iterator = new NewListSuggestionIter(suggestionDAO, itemIds, initialPage);
+        } else if (startDate != null && isDeleted != null) {
+            if (isDeleted) {
+                iterator = new NewInactiveSuggestionIter(suggestionDAO, startDate, initialPage);
+            } else {
+                iterator = new NewActiveSuggestionIter(suggestionDAO, startDate, initialPage);
             }
-            else{
-               iterator=   new NewActiveSuggestionIter(suggestionDAO,startDate,initialPage);
-            }
-            
-        }
-        else if(startDate!=null&&isDeleted==null){
-             iterator=   new NewSuggestionIter(suggestionDAO,startDate,initialPage);
-        }
-        else{
-             iterator= new FullActiveSuggestionIter(suggestionDAO,initialPage);
+
+        } else if (startDate != null && isDeleted == null) {
+            iterator = new NewSuggestionIter(suggestionDAO, startDate, initialPage);
+        } else {
+            iterator = new FullActiveSuggestionIter(suggestionDAO, initialPage);
         }
         return iterator;
     }
-    
+
 }

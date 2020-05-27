@@ -14,14 +14,21 @@ import java.util.List;
  *
  * @author vinayak
  */
-
 public interface ElasticSuggestionDAO {
+
     public String save(SuggestionDocument suggestionDocument) throws IOException;
+
     public void delete(String id) throws IOException;
-    public void bulkAPI(List<SuggestionDocument> suggestionDocumentList,IndexOperations indexOperation) throws IOException;
+
+    public void bulkAPI(List<SuggestionDocument> suggestionDocumentList, IndexOperations indexOperation) throws IOException;
+
     public void bulkAPI(List<SuggestionDocument> suggestionDocumentList) throws IOException;
+
     public SuggestionDocument get(String suggestionDocumentId) throws IOException;
+
     public List<SuggestionDocument> get(List<String> suggestionDocumentIds) throws IOException;
+
     public boolean createIndex() throws IOException;
+
     public boolean deleteIndex() throws IOException;
 }

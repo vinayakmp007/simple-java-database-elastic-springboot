@@ -10,11 +10,12 @@ package com.vinayaksproject.simpleelasticproject.enums;
  * @author vinayak
  */
 public enum ParameterFieldNames {
-    lastIndexTime("lastIndexTime"),suggestionids("suggestionids");
+    lastIndexTime("lastIndexTime"), suggestionids("suggestionids");
     private final String fieldName;
-    ParameterFieldNames(String fieldName){
-    this.fieldName=fieldName;
-}
+
+    ParameterFieldNames(String fieldName) {
+        this.fieldName = fieldName;
+    }
 
     /**
      * @return the fieldName
@@ -22,5 +23,5 @@ public enum ParameterFieldNames {
     public String getFieldName() {
         return fieldName;
     }
-    
+
 }

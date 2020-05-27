@@ -5,7 +5,6 @@
  */
 package com.vinayaksproject.simpleelasticproject;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
@@ -16,55 +15,52 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-
 /**
  *
  * @author vinayak
  */
-
 @Component
 @ConfigurationProperties("elastic")
 public class ElasticConfig {
-private static final Logger LOG = LoggerFactory.getLogger(ElasticConfig.class);
-private String EsHost;
 
-private String EsProtocol;   
-private int EsPort;
+    private static final Logger LOG = LoggerFactory.getLogger(ElasticConfig.class);
+    private String EsHost;
 
-private String EsIndexName;
-private String EsDoctypeName;
+    private String EsProtocol;
+    private int EsPort;
 
-private String EsClusterName;
-    
-private String clusterNodes;
-private String esShardsNo;
+    private String EsIndexName;
+    private String EsDoctypeName;
 
+    private String EsClusterName;
 
-@Bean(destroyMethod = "close")
-public RestHighLevelClient restHighLevelClient(){
-    
-    return buildClient();
-}
+    private String clusterNodes;
+    private String esShardsNo;
 
+    @Bean(destroyMethod = "close")
+    public RestHighLevelClient restHighLevelClient() {
 
-@Bean
-public ObjectMapper defaultObjectMapper(){
-    
-    return new ObjectMapper();
-}
+        return buildClient();
+    }
 
-      private RestHighLevelClient buildClient() {
-         if(LOG.isInfoEnabled()){
+    @Bean
+    public ObjectMapper defaultObjectMapper() {
+
+        return new ObjectMapper();
+    }
+
+    private RestHighLevelClient buildClient() {
+        if (LOG.isInfoEnabled()) {
             LOG.info("Creating elasticsearch client ");
-         }
-         if(LOG.isDebugEnabled()){
-            StringBuilder log =new StringBuilder();
+        }
+        if (LOG.isDebugEnabled()) {
+            StringBuilder log = new StringBuilder();
             log.append("Host:").append(getEsHost());
             log.append("Port:").append(getEsPort());
             log.append("Protocol:").append(getEsProtocol());
             LOG.debug("Creating elasticsearch client ");
         }
-         RestHighLevelClient restHighLevelClient = null;
+        RestHighLevelClient restHighLevelClient = null;
         try {
             restHighLevelClient = new RestHighLevelClient(
                     RestClient.builder(
@@ -186,5 +182,5 @@ public ObjectMapper defaultObjectMapper(){
     public void setEsShardsNo(String esShardsNo) {
         this.esShardsNo = esShardsNo;
     }
-    
+
 }
