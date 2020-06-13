@@ -14,13 +14,13 @@ import java.util.List;
  */
 public interface TaskService {
 
-    public void executeTask(Task task);
+    public void executeTask(AbstractTask task);
 
     public boolean lockTasktoServer(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task);
 
     public List<com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry> getAvailableTasks(int maxno);
 
-    public Task generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task);
+    public AbstractTask generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task);
 
     public void pollForTasks();
 }

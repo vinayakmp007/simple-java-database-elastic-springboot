@@ -63,7 +63,7 @@ public class IndexTaskService implements TaskService {
     }
 
     @Override
-    public Task generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task) {
+    public AbstractTask generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task) {
         try {
             return getTaskFactory().NewIndexTask(task);
         } catch (JsonProcessingException ex) {
@@ -73,7 +73,7 @@ public class IndexTaskService implements TaskService {
     }
 
     @Override
-    public void executeTask(Task task) {
+    public void executeTask(AbstractTask task) {
 
         Future<IndexTaskEntry> result = getExecutor().submit(getTaskFactory().NewIndexTaskExecutorImpl(task, getIndexTaskDAO().findById(task.getTaskid()).get()));
         getTaskMap().put(task.getTaskid(), result);

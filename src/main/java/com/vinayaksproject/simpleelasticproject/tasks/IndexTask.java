@@ -31,7 +31,7 @@ import org.springframework.data.domain.Pageable;
  *
  * @author vinayak
  */
-public final class IndexTask extends Task {
+public final class IndexTask extends AbstractTask {
 
     private Boolean fullActiveIndex;
     private Boolean instantIndex;
@@ -84,7 +84,7 @@ public final class IndexTask extends Task {
         }
         try {
             doBulkIndex();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             throw new TaskFailedException("The bulk index operation failed of the index task", ex);
         }
         throw new TaskSuccessfulException("The bulk index operation was successful for the index task");
@@ -252,13 +252,6 @@ public final class IndexTask extends Task {
      */
     public static Logger getLOG() {
         return LOG;
-    }
-
-    /**
-     * @param aLOG the LOG to set
-     */
-    public static void setLOG(Logger aLOG) {
-        LOG = aLOG;
     }
 
     /**

@@ -8,16 +8,16 @@ package com.vinayaksproject.simpleelasticproject.tasks;
 import java.util.Map;
 
 /**
- * The base Task class
+ * The base AbstractTask class
  *
  * @author vinayak
  */
-public abstract class Task implements Taskable {
+public abstract class AbstractTask implements Taskable {
 
     private Map<String, Object> paramsMap;
     private final int taskid;
 
-    Task(int taskid, Map paramsMap) {
+    AbstractTask(int taskid, Map paramsMap) {
         this.taskid = taskid;
         this.paramsMap = paramsMap;
 
