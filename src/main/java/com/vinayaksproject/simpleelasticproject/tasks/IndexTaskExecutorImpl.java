@@ -7,7 +7,6 @@ package com.vinayaksproject.simpleelasticproject.tasks;
 
 import com.vinayaksproject.simpleelasticproject.dao.IndexTaskDAO;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
-import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskSuccessfulException;
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,10 +40,9 @@ public class IndexTaskExecutorImpl implements IndexTaskExecutor {
             started = true;
             task.initialize();
             task.start();
-
-        } catch (TaskSuccessfulException ex) {
             taskMetaData.setStatus(JobStatus.SUCCESSFUL);
-            taskMetaData.setDetails(ex.getLocalizedMessage());
+            taskMetaData.setDetails("Task ended Succesfully");
+
         } catch (Exception ex) {
             taskMetaData.setStatus(JobStatus.FAILED);
             taskMetaData.setDetails(ex.getLocalizedMessage());

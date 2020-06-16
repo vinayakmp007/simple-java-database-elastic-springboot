@@ -12,9 +12,8 @@ import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
 import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 import com.vinayaksproject.simpleelasticproject.enums.ParameterFieldNames;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskFailedException;
-import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskSuccessfulException;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskTerminatedException;
-import com.vinayaksproject.simpleelasticproject.utils.EntityConverter;
+import com.vinayaksproject.simpleelasticproject.utils.SuggestionConverter;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -45,6 +44,7 @@ public final class IndexTask extends AbstractTask {
     private List<Integer> docIDs;
     private Pageable initialPage;
     private ElasticSuggestionDAO elasticDao;
+    private SuggestionConverter suggestionConverter;
     private static Logger LOG = Logger.getLogger(IndexTask.class.getName());
 
     public IndexTask(int taskid, Map paramsMap) {
@@ -87,7 +87,6 @@ public final class IndexTask extends AbstractTask {
         } catch (IOException ex) {
             throw new TaskFailedException("The bulk index operation failed of the index task", ex);
         }
-        throw new TaskSuccessfulException("The bulk index operation was successful for the index task");
     }
 
     @Override
@@ -101,7 +100,7 @@ public final class IndexTask extends AbstractTask {
         }
         List<SuggestionDocument> list = new ArrayList();
         while (getDaoIterator().hasNext()) {
-            list.add(EntityConverter.SuggestionEntitytoDocument(getDaoIterator().next()));
+            list.add(suggestionConverter.EntitytoDocument(getDaoIterator().next()));
             if (list.size() >= getJobDetails().getBulkDocCount()) {
                 getElasticDao().bulkAPI(list);
                 list.clear();
@@ -230,6 +229,15 @@ public final class IndexTask extends AbstractTask {
     @Autowired
     public void setInitialPage(Pageable initialPage) {
         this.initialPage = initialPage;
+    }
+
+    public SuggestionConverter getSuggestionConverter() {
+        return suggestionConverter;
+    }
+
+    @Autowired
+    public void setSuggestionConverter(SuggestionConverter suggestionConverter) {
+        this.suggestionConverter = suggestionConverter;
     }
 
     /**

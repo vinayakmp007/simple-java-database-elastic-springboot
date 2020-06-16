@@ -17,7 +17,6 @@ import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
 import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 import com.vinayaksproject.simpleelasticproject.enums.ParameterFieldNames;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskFailedException;
-import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskSuccessfulException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -190,26 +189,26 @@ public class IndexTaskTest {
         try {
             task1.initialize();
             task1.start();
-            fail("Exception was not thrown");
+          
         } catch (Exception ex) {
             System.out.println(ex);
-            assertTrue(ex instanceof TaskSuccessfulException);
+             fail("Exception was  thrown");
         }
         try {
             task2.initialize();
             task2.start();
-            fail("Exception was not thrown");
+             
         } catch (Exception ex) {
 
-            assertTrue(ex instanceof TaskSuccessfulException);
+              fail("Exception was  thrown");
         }
         try {
             task3.initialize();
             task3.start();
-            fail("Exception was not thrown");
+           
         } catch (Exception ex) {
 
-            assertTrue(ex instanceof TaskSuccessfulException);
+             fail("Exception was  thrown");
         }
         task1.initialize();
         task1.setElasticDao(elasticDAO);
@@ -232,7 +231,7 @@ public class IndexTaskTest {
                 task1.start();
             } catch (Exception ex) {
 
-                assertTrue(ex instanceof TaskSuccessfulException);
+                 fail("Exception was  thrown");
             }
             totalHits += list.size() / maxCount + ((list.size() % maxCount == 0) ? 0 : 1);
             verify(elasticDAO, times(totalHits)).bulkAPI(isA(List.class));
