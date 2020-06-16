@@ -13,7 +13,7 @@ import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 import com.vinayaksproject.simpleelasticproject.enums.ParameterFieldNames;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskFailedException;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskTerminatedException;
-import com.vinayaksproject.simpleelasticproject.utils.SuggestionConverter;
+import com.vinayaksproject.simpleelasticproject.utils.SuggestionConverterImpl;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public final class IndexTask extends AbstractTask {
     private List<Integer> docIDs;
     private Pageable initialPage;
     private ElasticSuggestionDAO elasticDao;
-    private SuggestionConverter suggestionConverter;
+    private SuggestionConverterImpl suggestionConverter;
     private static Logger LOG = Logger.getLogger(IndexTask.class.getName());
 
     public IndexTask(int taskid, Map paramsMap) {
@@ -231,12 +231,12 @@ public final class IndexTask extends AbstractTask {
         this.initialPage = initialPage;
     }
 
-    public SuggestionConverter getSuggestionConverter() {
+    public SuggestionConverterImpl getSuggestionConverter() {
         return suggestionConverter;
     }
 
     @Autowired
-    public void setSuggestionConverter(SuggestionConverter suggestionConverter) {
+    public void setSuggestionConverter(SuggestionConverterImpl suggestionConverter) {
         this.suggestionConverter = suggestionConverter;
     }
 
