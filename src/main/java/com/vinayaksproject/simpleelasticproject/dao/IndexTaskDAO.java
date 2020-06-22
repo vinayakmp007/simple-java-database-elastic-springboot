@@ -8,14 +8,13 @@ package com.vinayaksproject.simpleelasticproject.dao;
 import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.List;
-import javax.transaction.Transactional;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author vinayak
@@ -32,7 +31,7 @@ public interface IndexTaskDAO extends CrudRepository<IndexTaskEntry, Integer> {
 
     @Modifying
     @Query("update indextask set version=version+1,serverName=:serverName   where id=:taskId and status=:status")
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void lockTaskforServer(String serverName, Integer taskId, JobStatus status);
 
 }
