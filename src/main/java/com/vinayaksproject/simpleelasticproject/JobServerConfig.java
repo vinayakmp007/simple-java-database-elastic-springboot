@@ -5,10 +5,8 @@
  */
 package com.vinayaksproject.simpleelasticproject;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -27,6 +25,7 @@ public class JobServerConfig {
     private int bulkSize;
     private int pageSize;
     private int maxTasksToPoll;
+
     /**
      * @return the name
      */
