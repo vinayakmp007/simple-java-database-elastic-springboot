@@ -16,7 +16,7 @@ import javax.persistence.Id;
  * @author vinayak
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class SuggestionDocument {
+public class SuggestionDocument extends AbstractDocument{
 
     @Id
     private String id;
