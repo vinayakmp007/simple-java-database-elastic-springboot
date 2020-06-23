@@ -6,12 +6,17 @@
 package com.vinayaksproject.simpleelasticproject.dao;
 
 import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
-import com.vinayaksproject.simpleelasticproject.enums.IndexOperations;
+import com.vinayaksproject.simpleelasticproject.enums.ElasticRequest;
+import com.vinayaksproject.simpleelasticproject.enums.QueryFields;
+import com.vinayaksproject.simpleelasticproject.query.ElasticQueryPrimitiveImpl;
+import com.vinayaksproject.simpleelasticproject.query.ElasticResult;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -28,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
@@ -154,7 +160,7 @@ public class SuggestionDocumentDAOTest {
             itemList.add(temp);
         }
         try {
-            ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.CREATE);
+            ElasticSuggestionDAO.bulkAPI(itemList, ElasticRequest.CREATE);
             documentList = ElasticSuggestionDAO.get(idList);
             assertNotNull(documentList);
             assertEquals(2500, documentList.size());
@@ -176,7 +182,7 @@ public class SuggestionDocumentDAOTest {
         }
 
         try {
-            ElasticSuggestionDAO.bulkAPI(itemList, IndexOperations.UPDATE);
+            ElasticSuggestionDAO.bulkAPI(itemList, ElasticRequest.UPDATE);
             documentList = ElasticSuggestionDAO.get(idList);
             assertNotNull(documentList);
             assertEquals(2500, documentList.size());
@@ -195,7 +201,7 @@ public class SuggestionDocumentDAOTest {
         List<SuggestionDocument> deletedList = itemList.subList(0, 800);
         itemList = itemList.subList(800, 2500);
         try {
-            ElasticSuggestionDAO.bulkAPI(deletedList, IndexOperations.DELETE);
+            ElasticSuggestionDAO.bulkAPI(deletedList, ElasticRequest.DELETE);
             documentList = ElasticSuggestionDAO.get(idList);
             assertNotNull(documentList);
             documentList = documentList.stream().filter(x -> x != null).collect(Collectors.toList());//null will be returned with deleted ids
@@ -211,4 +217,70 @@ public class SuggestionDocumentDAOTest {
             fail("Exception was thrown" + ex);
         }
     }
+
+    @Test
+    public void testFindByQuery() throws IOException {
+        List<SuggestionDocument> itemList = new ArrayList();
+        final List idList = new ArrayList<String>();
+        List<SuggestionDocument> documentList = null;
+        for (int i = 0; i < 2500; i++) {
+            SuggestionDocument temp = new SuggestionDocument();
+            temp.setSuggestion("Suggestion " + i + UUID.randomUUID());
+            temp.setId(String.valueOf(i));
+            temp.setDbCreationDate(new Timestamp(System.currentTimeMillis()));
+            temp.setDbLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+            temp.setDbVersion(1);
+            idList.add(temp.getId());
+            itemList.add(temp);
+        }
+        SuggestionDocument temp = new SuggestionDocument();
+        temp.setSuggestion("this works well");
+        temp.setId(String.valueOf(2500));
+        temp.setDbCreationDate(new Timestamp(System.currentTimeMillis()));
+        temp.setDbLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+        temp.setDbVersion(1);
+        idList.add(temp.getId());
+        itemList.add(temp);
+        temp = new SuggestionDocument();
+        temp.setSuggestion("this also works");
+        temp.setId(String.valueOf(2501));
+        temp.setDbCreationDate(new Timestamp(System.currentTimeMillis()));
+        temp.setDbLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+        temp.setDbVersion(1);
+        idList.add(temp.getId());
+        itemList.add(temp);
+        temp = new SuggestionDocument();
+        temp.setSuggestion("this works");
+        temp.setId(String.valueOf(2502));
+        temp.setDbCreationDate(new Timestamp(System.currentTimeMillis()));
+        temp.setDbLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+        temp.setDbVersion(1);
+        idList.add(temp.getId());
+        itemList.add(temp);
+
+        ElasticSuggestionDAO.bulkAPI(itemList, ElasticRequest.CREATE);
+        Map<String, Object> queryMap = new HashMap();
+        ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder builder = new ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder();
+
+        queryMap.put(QueryFields.OPERATION.getName(), "search");
+        queryMap.put(QueryFields.SEARCH_FIELD.getName(), "suggestion");
+        queryMap.put(QueryFields.SEARCH_STRING.getName(), "this works well");
+        queryMap.put(QueryFields.SEARCH_FIELD.getName(), "suggestion");
+        queryMap.put(QueryFields.HIGHLIGHT.getName(), true);
+        builder.buildQuery(queryMap);
+        builder.buildHightLight(queryMap);
+       ElasticResult<SuggestionDocument> result = ElasticSuggestionDAO.findByQuery(builder.build(), PageRequest.of(0, 100));
+       result.getEntityResults().forEach((resultDoc) -> {
+           String suggestion = resultDoc.getObject().getSuggestion();
+           if(suggestion.contains("this")||suggestion.contains("works")||suggestion.contains("well")){
+               for(String fragment:resultDoc.getHighlight().get("suggestion")){
+                   assertTrue(fragment.contains("this")||fragment.contains("works")||fragment.contains("well"));
+               }
+           }
+           else {
+               fail("The result doesn't match the expected query");
+           }
+        });
+    }
+
 }
