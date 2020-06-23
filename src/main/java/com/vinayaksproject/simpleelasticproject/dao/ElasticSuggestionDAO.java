@@ -6,9 +6,14 @@
 package com.vinayaksproject.simpleelasticproject.dao;
 
 import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
-import com.vinayaksproject.simpleelasticproject.enums.IndexOperations;
+import com.vinayaksproject.simpleelasticproject.enums.ElasticRequest;
+import com.vinayaksproject.simpleelasticproject.query.ElasticQuery;
+import com.vinayaksproject.simpleelasticproject.query.ElasticResult;
 import java.io.IOException;
 import java.util.List;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -20,7 +25,7 @@ public interface ElasticSuggestionDAO {
 
     public void delete(String id) throws IOException;
 
-    public void bulkAPI(List<SuggestionDocument> suggestionDocumentList, IndexOperations indexOperation) throws IOException;
+    public void bulkAPI(List<SuggestionDocument> suggestionDocumentList, ElasticRequest indexOperation) throws IOException;
 
     public void bulkAPI(List<SuggestionDocument> suggestionDocumentList) throws IOException;
 
@@ -31,4 +36,6 @@ public interface ElasticSuggestionDAO {
     public boolean createIndex() throws IOException;
 
     public boolean deleteIndex() throws IOException;
+
+    public ElasticResult<SuggestionDocument> findByQuery(ElasticQuery elasticQuery, Pageable page) throws IOException;
 }

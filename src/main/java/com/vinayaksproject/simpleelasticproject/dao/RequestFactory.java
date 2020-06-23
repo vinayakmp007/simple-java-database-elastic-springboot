@@ -6,13 +6,14 @@
 package com.vinayaksproject.simpleelasticproject.dao;
 
 import com.vinayaksproject.simpleelasticproject.ElasticConfig;
-import com.vinayaksproject.simpleelasticproject.enums.IndexOperations;
+import com.vinayaksproject.simpleelasticproject.enums.ElasticRequest;
 import org.elasticsearch.action.ActionRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.MultiGetRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,7 +33,7 @@ public class RequestFactory {
 
     @Bean(autowireCandidate = false)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public ActionRequest newActionRequest(IndexOperations indexOperation) {
+    public ActionRequest newActionRequest(ElasticRequest indexOperation) {
         ActionRequest actionRequest = null;
         if (null != indexOperation) {
             switch (indexOperation) {
@@ -47,6 +48,9 @@ public class RequestFactory {
                     break;
                 case GET:
                     actionRequest = new GetRequest(elasticConfig.getEsIndexName());
+                    break;
+                case SEARCH:
+                    actionRequest = new SearchRequest(elasticConfig.getEsIndexName());
                     break;
                 case BULK:
                     actionRequest = new BulkRequest();
