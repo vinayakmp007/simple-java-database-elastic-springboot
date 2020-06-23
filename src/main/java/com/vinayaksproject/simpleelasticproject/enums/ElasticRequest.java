@@ -5,16 +5,17 @@
  */
 package com.vinayaksproject.simpleelasticproject.enums;
 
-/**
+/**This is enum for different types of request for Elastic Search
  *
  * @author vinayak
  */
-public enum IndexOperations {
+public enum ElasticRequest {
     CREATE,
     UPDATE,
     DELETE,
     GET,
     BULK,
-    MULTI
+    MULTI,
+    SEARCH
 
 }
