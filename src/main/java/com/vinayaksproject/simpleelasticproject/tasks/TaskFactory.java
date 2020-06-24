@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinayaksproject.simpleelasticproject.JobServerConfig;
 import com.vinayaksproject.simpleelasticproject.dao.DAOIteratorFactory;
 import com.vinayaksproject.simpleelasticproject.dao.SuggestionDocumentDAO;
-import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
+import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -39,7 +39,7 @@ public class TaskFactory {
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public IndexTask NewIndexTask(IndexTaskEntry taskMetaData) throws JsonProcessingException {
+    public IndexTask NewIndexTask(TaskEntry taskMetaData) throws JsonProcessingException {
         Map paramsMap = defaultObjectMapper.readValue(taskMetaData.getParameters(), Map.class);
         IndexTask task = new IndexTask(taskMetaData.getId(), paramsMap);
         return task;
@@ -47,7 +47,7 @@ public class TaskFactory {
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public IndexTaskExecutorImpl NewIndexTaskExecutorImpl(Taskable task, IndexTaskEntry taskMetaData) {
+    public IndexTaskExecutorImpl NewIndexTaskExecutorImpl(Taskable task, TaskEntry taskMetaData) {
 
         return new IndexTaskExecutorImpl(task, taskMetaData);
 

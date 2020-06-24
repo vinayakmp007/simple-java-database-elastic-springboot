@@ -13,7 +13,7 @@ import com.vinayaksproject.simpleelasticproject.dao.SuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.dao.iterator.FullActiveSuggestionIter;
 import com.vinayaksproject.simpleelasticproject.dao.iterator.NewListSuggestionIter;
 import com.vinayaksproject.simpleelasticproject.dao.iterator.NewSuggestionIter;
-import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
+import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
 import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 import com.vinayaksproject.simpleelasticproject.enums.ParameterFieldNames;
 import com.vinayaksproject.simpleelasticproject.tasks.exceptions.TaskFailedException;
@@ -105,7 +105,7 @@ public class IndexTaskTest {
 
     IndexTask createSuggestionIdTAsk() {
 
-        IndexTaskEntry taskEntry = new IndexTaskEntry();
+        TaskEntry taskEntry = new TaskEntry();
         taskEntry.setId(taskno++);
         Map map = new HashMap();
         List<Integer> id = new ArrayList();
@@ -126,7 +126,7 @@ public class IndexTaskTest {
 
     IndexTask createFullIndexTask() throws JsonProcessingException {
 
-        IndexTaskEntry taskEntry = new IndexTaskEntry();
+        TaskEntry taskEntry = new TaskEntry();
         taskEntry.setId(taskno++);
         Map map = new HashMap();
         IndexTask task = null;
@@ -140,8 +140,8 @@ public class IndexTaskTest {
         return task;
     }
 
-    IndexTaskEntry getNewTaskEntry(String map) {
-        IndexTaskEntry taskEntry = new IndexTaskEntry();
+    TaskEntry getNewTaskEntry(String map) {
+        TaskEntry taskEntry = new TaskEntry();
         taskEntry.setId(taskno++);
         taskEntry.setParameters(map);
         return taskEntry;
@@ -149,7 +149,7 @@ public class IndexTaskTest {
 
     IndexTask createUpdateIndexTask() throws JsonProcessingException {
 
-        IndexTaskEntry taskEntry = new IndexTaskEntry();
+        TaskEntry taskEntry = new TaskEntry();
         taskEntry.setId(taskno++);
         Map map = new HashMap();
         IndexTask task = null;

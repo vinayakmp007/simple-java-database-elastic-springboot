@@ -21,9 +21,9 @@ import javax.persistence.Table;
  *
  * @author vinayak
  */
-@Entity(name = "indextask")
-@Table(name = "indextask")
-public class IndexTaskEntry extends EntityAudit {
+@Entity(name = "tasks")
+@Table(name = "tasks")
+public class TaskEntry extends EntityAudit {
 
     @Id
     @GeneratedValue
@@ -177,7 +177,7 @@ public class IndexTaskEntry extends EntityAudit {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final IndexTaskEntry other = (IndexTaskEntry) obj;
+        final TaskEntry other = (TaskEntry) obj;
         if (this.id != other.id) {
             return false;
         }

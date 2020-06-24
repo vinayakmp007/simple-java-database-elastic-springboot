@@ -5,7 +5,7 @@
  */
 package com.vinayaksproject.simpleelasticproject.dao;
 
-import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
+import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -20,17 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
  * @author vinayak
  */
 @Repository
-public interface IndexTaskDAO extends CrudRepository<IndexTaskEntry, Integer> {
+public interface IndexTaskDAO extends CrudRepository<TaskEntry, Integer> {
 
-    List<IndexTaskEntry> findByStatus(JobStatus statusm, Pageable page);
+    List<TaskEntry> findByStatus(JobStatus statusm, Pageable page);
 
     @Modifying
-    @Query("DELETE FROM indextask")
+    @Query("DELETE FROM tasks")
     @Transactional
     public void deleteAllInSingleQuery();
 
     @Modifying
-    @Query("update indextask set version=version+1,serverName=:serverName   where id=:taskId and status=:status")
+    @Query("update tasks set version=version+1,serverName=:serverName   where id=:taskId and status=:status")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void lockTaskforServer(String serverName, Integer taskId, JobStatus status);
 

@@ -10,7 +10,7 @@ import com.vinayaksproject.simpleelasticproject.JobServerConfig;
 import com.vinayaksproject.simpleelasticproject.dao.ElasticSuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.dao.IndexTaskDAO;
 import com.vinayaksproject.simpleelasticproject.dao.SuggestionDAO;
-import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
+import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -93,7 +93,7 @@ public class IndexTaskServiceTest {
     @Test
     public void testLockTasktoServer() {
         System.out.println("lockTasktoServer");
-        IndexTaskEntry task = new IndexTaskEntry();
+        TaskEntry task = new TaskEntry();
         task.setId(1);
         when(jobConfig.getName()).thenReturn("testserv");
         task.setServerName("testserv");
@@ -119,9 +119,9 @@ public class IndexTaskServiceTest {
     public void testGetAvailableTasks() {
         System.out.println("getAvailableTasks");
 
-        List<IndexTaskEntry> list = new ArrayList();
+        List<TaskEntry> list = new ArrayList();
         for (int i = 0; i < 10; i++) {
-            IndexTaskEntry task = new IndexTaskEntry();
+            TaskEntry task = new TaskEntry();
             task.setId(i);
             when(jobConfig.getName()).thenReturn("testserv");
             task.setServerName("testserv");
@@ -138,7 +138,7 @@ public class IndexTaskServiceTest {
      */
     @Test
     public void testGenerateExecutableTask() throws JsonProcessingException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        IndexTaskEntry task = new IndexTaskEntry();
+        TaskEntry task = new TaskEntry();
         task.setId(1);
         when(jobConfig.getName()).thenReturn("testserv");
         task.setServerName("testserv");
@@ -168,7 +168,7 @@ public class IndexTaskServiceTest {
     public void testExecuteTask() throws InterruptedException, ExecutionException {
         System.out.println("executeTask");
         IndexTask returnTask = new IndexTask(1, new HashMap());
-        IndexTaskEntry taskEntry = new IndexTaskEntry();
+        TaskEntry taskEntry = new TaskEntry();
         taskEntry.setId(1);
         taskEntry.setServerName("testserv");
         taskEntry.setStatus(JobStatus.CREATED);
@@ -189,12 +189,12 @@ public class IndexTaskServiceTest {
     public void testPollForTasks() throws JsonProcessingException {
         System.out.println("pollForTasks");
 
-        List<IndexTaskEntry> list = new ArrayList();
-        IndexTaskEntry task = null;
+        List<TaskEntry> list = new ArrayList();
+        TaskEntry task = null;
         service.setTaskFactory(taskFactory);
         service.setExecutor(executor);
         for (int i = 0; i < 10; i++) {
-            task = new IndexTaskEntry();
+            task = new TaskEntry();
             task.setId(i);
             when(jobConfig.getName()).thenReturn("testserv");
             task.setServerName("testserv");

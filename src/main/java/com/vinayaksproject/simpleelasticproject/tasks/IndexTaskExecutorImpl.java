@@ -22,9 +22,9 @@ public class IndexTaskExecutorImpl implements IndexTaskExecutor {
     Taskable task;
     private boolean started;
     private long executiontime;
-    com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData;
+    com.vinayaksproject.simpleelasticproject.entity.TaskEntry taskMetaData;
 
-    public IndexTaskExecutorImpl(Taskable task, com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry taskMetaData) {
+    public IndexTaskExecutorImpl(Taskable task, com.vinayaksproject.simpleelasticproject.entity.TaskEntry taskMetaData) {
         this.task = task;
         this.taskMetaData = taskMetaData;
         started = false;

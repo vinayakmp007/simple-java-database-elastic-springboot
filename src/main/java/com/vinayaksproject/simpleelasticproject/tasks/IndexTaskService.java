@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinayaksproject.simpleelasticproject.JobServerConfig;
 import com.vinayaksproject.simpleelasticproject.dao.IndexTaskDAO;
-import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
+import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.List;
 import java.util.Optional;
@@ -51,19 +51,19 @@ public class IndexTaskService implements TaskService {
     }
 
     @Override
-    public boolean lockTasktoServer(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task) {
+    public boolean lockTasktoServer(com.vinayaksproject.simpleelasticproject.entity.TaskEntry task) {
         getIndexTaskDAO().lockTaskforServer(getJobServer().getName(), task.getId(), JobStatus.CREATED);
-        Optional<IndexTaskEntry> updatedTask = getIndexTaskDAO().findById(task.getId());
+        Optional<TaskEntry> updatedTask = getIndexTaskDAO().findById(task.getId());
         return updatedTask.isPresent() && getJobServer().getName().equals(updatedTask.get().getServerName());
     }
 
     @Override
-    public List<com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry> getAvailableTasks(int maxno) {
+    public List<com.vinayaksproject.simpleelasticproject.entity.TaskEntry> getAvailableTasks(int maxno) {
         return getIndexTaskDAO().findByStatus(JobStatus.CREATED, PageRequest.of(0, maxno, Sort.by("Id")));
     }
 
     @Override
-    public AbstractTask generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry task) {
+    public AbstractTask generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.TaskEntry task) {
         try {
             return getTaskFactory().NewIndexTask(task);
         } catch (JsonProcessingException ex) {
@@ -75,13 +75,13 @@ public class IndexTaskService implements TaskService {
     @Override
     public void executeTask(AbstractTask task) {
 
-        Future<IndexTaskEntry> result = getExecutor().submit(getTaskFactory().NewIndexTaskExecutorImpl(task, getIndexTaskDAO().findById(task.getTaskid()).get()));
+        Future<TaskEntry> result = getExecutor().submit(getTaskFactory().NewIndexTaskExecutorImpl(task, getIndexTaskDAO().findById(task.getTaskid()).get()));
         getTaskMap().put(task.getTaskid(), result);
     }
 
     @Override
     public void pollForTasks() {
-        List<IndexTaskEntry> newTaskEntries = getAvailableTasks(25);
+        List<TaskEntry> newTaskEntries = getAvailableTasks(25);
         newTaskEntries.stream().filter((entry) -> (lockTasktoServer(entry))).map((entry) -> getIndexTaskDAO().findById(entry.getId())).map((updatedTask) -> generateExecutableTask(updatedTask.get())).forEachOrdered((newTask) -> {
             executeTask(newTask);
         });

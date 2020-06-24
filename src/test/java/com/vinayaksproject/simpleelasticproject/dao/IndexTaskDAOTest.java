@@ -6,7 +6,7 @@
 package com.vinayaksproject.simpleelasticproject.dao;
 
 import com.vinayaksproject.simpleelasticproject.JobServerConfig;
-import com.vinayaksproject.simpleelasticproject.entity.IndexTaskEntry;
+import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
 import com.vinayaksproject.simpleelasticproject.enums.IndexJobType;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.ArrayList;
@@ -56,19 +56,19 @@ public class IndexTaskDAOTest {
         instance.deleteAllInSingleQuery();
         itemList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            IndexTaskEntry temp = new IndexTaskEntry();
+            TaskEntry temp = new TaskEntry();
             temp.setDetails("IndexTask" + i);
             temp.setTaskType(IndexJobType.FULL_INDEX);
             itemList.add(instance.save(temp));
         }
         for (int i = 0; i < 15; i++) {
-            IndexTaskEntry temp = new IndexTaskEntry();
+            TaskEntry temp = new TaskEntry();
             temp.setDetails("IndexTask" + i);
             temp.setTaskType(IndexJobType.UPDATE_INDEX);
             itemList.add(instance.save(temp));
         }
         for (int i = 0; i < 25; i++) {
-            IndexTaskEntry temp = new IndexTaskEntry();
+            TaskEntry temp = new TaskEntry();
             temp.setDetails("IndexTask" + i);
             temp.setTaskType(IndexJobType.INSTANT_UPDATE);
             itemList.add(instance.save(temp));
@@ -86,9 +86,9 @@ public class IndexTaskDAOTest {
     @Test
     public void testTransaction() {
 
-        List<IndexTaskEntry> result = instance.findByStatus(JobStatus.CREATED, PageRequest.of(0, 10, Sort.by("id")));
+        List<TaskEntry> result = instance.findByStatus(JobStatus.CREATED, PageRequest.of(0, 10, Sort.by("id")));
 
-        for (IndexTaskEntry task : result) {
+        for (TaskEntry task : result) {
             task.setServerName(jobServer.getName());
             instance.lockTaskforServer("aNotherServer", task.getId(), JobStatus.CREATED);
             try {
