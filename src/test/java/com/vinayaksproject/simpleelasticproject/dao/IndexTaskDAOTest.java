@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,6 +101,41 @@ public class IndexTaskDAOTest {
             }
         }
 
+    }
+
+    @Test
+    public void testLastestByStatus() {
+
+        TaskEntry expLatest = null;
+        TaskEntry latest = null;
+        for (int i = 0; i < 3; i++) {
+            TaskEntry temp = new TaskEntry();
+            temp.setDetails("IndexTask" + i);
+            temp.setTaskType(IndexJobType.UPDATE_INDEX);
+            temp.setStatus(JobStatus.SUCCESSFUL);
+            itemList.add(instance.save(temp));
+            expLatest = temp;
+        }
+        for (int i = 0; i < 3; i++) {
+            TaskEntry temp = new TaskEntry();
+            temp.setDetails("IndexTask" + i);
+            temp.setTaskType(IndexJobType.UPDATE_INDEX);
+            temp.setStatus(JobStatus.RUNNING);
+            itemList.add(instance.save(temp));
+
+        }
+        for (int i = 0; i < 3; i++) {
+            TaskEntry temp = new TaskEntry();
+            temp.setDetails("IndexTask" + i);
+            temp.setTaskType(IndexJobType.FULL_INDEX);
+            temp.setStatus(JobStatus.SUCCESSFUL);
+            itemList.add(instance.save(temp));
+
+        }
+        latest = instance.findLatestOfJobTypeAndStatus(IndexJobType.UPDATE_INDEX, JobStatus.SUCCESSFUL);
+        assertEquals(expLatest, latest);
+        instance.deleteAll();
+        assertNull(instance.findLatestOfJobTypeAndStatus(IndexJobType.UPDATE_INDEX, JobStatus.SUCCESSFUL));
     }
 
 }

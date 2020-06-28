@@ -8,7 +8,8 @@ package com.vinayaksproject.simpleelasticproject.query;
 import java.util.Map;
 import org.apache.commons.lang3.builder.Builder;
 
-/**This is the interface for builder classes for elasticQueryBuilder
+/**
+ * This is the interface for builder classes for elasticQueryBuilder
  *
  * @author vinayak
  */

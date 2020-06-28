@@ -18,15 +18,19 @@ import com.vinayaksproject.simpleelasticproject.query.ElasticEntityResultRow;
  * @param <U>
  * @param <W>
  */
-public interface Converter<T extends EntityAudit,U extends AbstractDTO,W extends AbstractDocument>  {
+public interface Converter<T extends EntityAudit, U extends AbstractDTO, W extends AbstractDocument> {
 
-    /**This is the interface for converting entities,documents,DTOs 
+    /**
+     * This is the interface for converting entities,documents,DTOs
      *
      * @param entity
      * @return
      */
     W EntitytoDocument(T entity);
+
     U DocumentoDTO(W document);
+
     U EntityToDTO(T entity);
+
     ResultRowDTO<U> ResultRowToDTO(ElasticEntityResultRow<W> resultRow);
 }

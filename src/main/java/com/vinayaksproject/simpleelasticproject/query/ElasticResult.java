@@ -7,7 +7,9 @@ package com.vinayaksproject.simpleelasticproject.query;
 
 import java.util.List;
 
-/**This class is used store and manipulated the results from elasticsearch server
+/**
+ * This class is used store and manipulated the results from elasticsearch
+ * server
  *
  * @author vinayak
  * @param <T>
@@ -33,5 +35,5 @@ public final class ElasticResult<T> {
     public long getTotalHits() {
         return totalHits;
     }
-    
+
 }

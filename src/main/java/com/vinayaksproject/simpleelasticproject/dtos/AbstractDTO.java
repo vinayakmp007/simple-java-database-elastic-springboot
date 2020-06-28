@@ -5,10 +5,11 @@
  */
 package com.vinayaksproject.simpleelasticproject.dtos;
 
-/**The hierarchical class for DTO;s
+/**
+ * The hierarchical class for DTO;s
  *
  * @author vinayak
  */
 public class AbstractDTO {
-    
+
 }

@@ -269,17 +269,16 @@ public class SuggestionDocumentDAOTest {
         queryMap.put(QueryFields.HIGHLIGHT.getName(), true);
         builder.buildQuery(queryMap);
         builder.buildHightLight(queryMap);
-       ElasticResult<SuggestionDocument> result = ElasticSuggestionDAO.findByQuery(builder.build(), PageRequest.of(0, 100));
-       result.getEntityResults().forEach((resultDoc) -> {
-           String suggestion = resultDoc.getObject().getSuggestion();
-           if(suggestion.contains("this")||suggestion.contains("works")||suggestion.contains("well")){
-               for(String fragment:resultDoc.getHighlight().get("suggestion")){
-                   assertTrue(fragment.contains("this")||fragment.contains("works")||fragment.contains("well"));
-               }
-           }
-           else {
-               fail("The result doesn't match the expected query");
-           }
+        ElasticResult<SuggestionDocument> result = ElasticSuggestionDAO.findByQuery(builder.build(), PageRequest.of(0, 100));
+        result.getEntityResults().forEach((resultDoc) -> {
+            String suggestion = resultDoc.getObject().getSuggestion();
+            if (suggestion.contains("this") || suggestion.contains("works") || suggestion.contains("well")) {
+                for (String fragment : resultDoc.getHighlight().get("suggestion")) {
+                    assertTrue(fragment.contains("this") || fragment.contains("works") || fragment.contains("well"));
+                }
+            } else {
+                fail("The result doesn't match the expected query");
+            }
         });
     }
 

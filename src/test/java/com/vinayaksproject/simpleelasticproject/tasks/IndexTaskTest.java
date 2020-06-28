@@ -189,26 +189,26 @@ public class IndexTaskTest {
         try {
             task1.initialize();
             task1.start();
-          
+
         } catch (Exception ex) {
             System.out.println(ex);
-             fail("Exception was  thrown");
+            fail("Exception was  thrown");
         }
         try {
             task2.initialize();
             task2.start();
-             
+
         } catch (Exception ex) {
 
-              fail("Exception was  thrown");
+            fail("Exception was  thrown");
         }
         try {
             task3.initialize();
             task3.start();
-           
+
         } catch (Exception ex) {
 
-             fail("Exception was  thrown");
+            fail("Exception was  thrown");
         }
         task1.initialize();
         task1.setElasticDao(elasticDAO);
@@ -231,7 +231,7 @@ public class IndexTaskTest {
                 task1.start();
             } catch (Exception ex) {
 
-                 fail("Exception was  thrown");
+                fail("Exception was  thrown");
             }
             totalHits += list.size() / maxCount + ((list.size() % maxCount == 0) ? 0 : 1);
             verify(elasticDAO, times(totalHits)).bulkAPI(isA(List.class));

@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-/**Test class for builder primitive query builder
+/**
+ * Test class for builder primitive query builder
  *
  * @author vinayak
  */
@@ -53,7 +54,8 @@ public class ElasticQueryPrimitiveImplTest {
             + "    }\n"
             + "  }\n"
             + "}";
-    static final String SOURCE_BUILDER_QUERY ="{\"query\":{\"match\":{\"suggestion\":{\"query\":\"this works well\",\"operator\":\"OR\",\"prefix_length\":0,\"max_expansions\":50,\"fuzzy_transpositions\":true,\"lenient\":false,\"zero_terms_query\":\"NONE\",\"auto_generate_synonyms_phrase_query\":true,\"boost\":1.0}}},\"highlight\":{\"fields\":{\"suggestion\":{\"type\":\"unified\"}}}}";
+    static final String SOURCE_BUILDER_QUERY = "{\"query\":{\"match\":{\"suggestion\":{\"query\":\"this works well\",\"operator\":\"OR\",\"prefix_length\":0,\"max_expansions\":50,\"fuzzy_transpositions\":true,\"lenient\":false,\"zero_terms_query\":\"NONE\",\"auto_generate_synonyms_phrase_query\":true,\"boost\":1.0}}},\"highlight\":{\"fields\":{\"suggestion\":{\"type\":\"unified\"}}}}";
+
     public ElasticQueryPrimitiveImplTest() {
 
     }
@@ -95,7 +97,7 @@ public class ElasticQueryPrimitiveImplTest {
         queryMap.put(QueryFields.SEARCH_STRING.getName(), "test");
 
         builder.buildQuery(queryMap);
-        assertEquals(builder.getQueryBuilder().toString(), QUERY );
+        assertEquals(builder.getQueryBuilder().toString(), QUERY);
 
         ElasticQueryPrimitiveImpl instance = builder.build();
         assertTrue(instance.containsQuery());
@@ -149,9 +151,9 @@ public class ElasticQueryPrimitiveImplTest {
     @Test
     public void testGetSearchSourceBuilder() {
         System.out.println("getSearchSourceBuilder");
-ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder builder = new ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder();
+        ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder builder = new ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder();
         Map<String, Object> queryMap = new HashMap();
-    
+
         queryMap.put(QueryFields.OPERATION.getName(), "search");
         queryMap.put(QueryFields.SEARCH_FIELD.getName(), "suggestion");
         queryMap.put(QueryFields.SEARCH_STRING.getName(), "this works well");
@@ -161,11 +163,11 @@ ElasticQueryPrimitiveImpl.ElasticQueryPrimitiveBuilder builder = new ElasticQuer
         builder.buildAggregrationQuery(queryMap);
         builder.buildHightLight(queryMap);
         builder.buildSort(queryMap);
-                builder.buildHightLight(queryMap);
+        builder.buildHightLight(queryMap);
         assertEquals(builder.getsearchSourceBuilder().toString(), SOURCE_BUILDER_QUERY);
 
         ElasticQueryPrimitiveImpl instance = builder.build();
-        assertEquals(instance.getSearchSourceBuilder().toString(),SOURCE_BUILDER_QUERY);
+        assertEquals(instance.getSearchSourceBuilder().toString(), SOURCE_BUILDER_QUERY);
     }
 
 }

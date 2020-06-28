@@ -349,7 +349,7 @@ public class SuggestionDocumentDAO implements ElasticSuggestionDAO {
         SearchRequest searchRequest = (SearchRequest) requestFactory.newActionRequest(ElasticRequest.SEARCH);
         searchSourceBuilder.from((int) page.getOffset());
         searchSourceBuilder.size(page.getPageSize());
-        if(!page.getSort().isSorted()){
+        if (!page.getSort().isSorted()) {
             searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
         }
         searchRequest.source(searchSourceBuilder);
@@ -388,7 +388,7 @@ public class SuggestionDocumentDAO implements ElasticSuggestionDAO {
                     highLightList.add(text.toString());
                 }
                 highLightMap.put(field, (String[]) highLightList.toArray(new String[highLightList.size()]));
-                
+
             }
             list.add(ElasticEntityResultRow.newInstance(document, highLightMap));
         }

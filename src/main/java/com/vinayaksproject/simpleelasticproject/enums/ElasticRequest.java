@@ -5,7 +5,8 @@
  */
 package com.vinayaksproject.simpleelasticproject.enums;
 
-/**This is enum for different types of request for Elastic Search
+/**
+ * This is enum for different types of request for Elastic Search
  *
  * @author vinayak
  */

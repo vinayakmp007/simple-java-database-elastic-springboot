@@ -6,6 +6,7 @@
 package com.vinayaksproject.simpleelasticproject.dao;
 
 import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
+import com.vinayaksproject.simpleelasticproject.enums.IndexJobType;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 /**
  *
  * @author vinayak
@@ -26,7 +28,7 @@ public interface IndexTaskDAO extends CrudRepository<TaskEntry, Integer> {
 
     @Modifying
     @Query("DELETE FROM tasks")
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteAllInSingleQuery();
 
     @Modifying
@@ -34,4 +36,6 @@ public interface IndexTaskDAO extends CrudRepository<TaskEntry, Integer> {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void lockTaskforServer(String serverName, Integer taskId, JobStatus status);
 
+    @Query("SELECT t FROM tasks t WHERE t.id=(SELECT max(t.id) FROM tasks t WHERE t.status =:status and t.taskType=:jobType)")
+    public TaskEntry findLatestOfJobTypeAndStatus(IndexJobType jobType, JobStatus status);
 }

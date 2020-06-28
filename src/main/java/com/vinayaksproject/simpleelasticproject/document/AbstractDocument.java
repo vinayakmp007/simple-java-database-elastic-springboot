@@ -10,5 +10,5 @@ package com.vinayaksproject.simpleelasticproject.document;
  * @author vinayak
  */
 public class AbstractDocument {
-    
+
 }

@@ -32,9 +32,9 @@ public class SuggestionConverterImplTest {
     private static Suggestion entity;
     private static SuggestionDocument document;
     private static SuggestionDTO dto;
-    private static ElasticEntityResultRow<SuggestionDocument> resultRow ;
-    private static Map<String,String[]> highlights;
-    private static ResultRowDTO<SuggestionDTO> resultRowDTO; 
+    private static ElasticEntityResultRow<SuggestionDocument> resultRow;
+    private static Map<String, String[]> highlights;
+    private static ResultRowDTO<SuggestionDTO> resultRowDTO;
 
     @BeforeAll
     public static void setUpClass() {
@@ -45,7 +45,7 @@ public class SuggestionConverterImplTest {
         entity.setDeleted(false);
         entity.setSuggestion("Suggestion");
         entity.setVersion(6);
-        
+
         document = new SuggestionDocument();
         document.setId(String.valueOf(entity.getId()));
         document.setDbCreationDate(entity.getCreationDate());
@@ -53,7 +53,7 @@ public class SuggestionConverterImplTest {
         document.setSuggestion(entity.getSuggestion());
         document.setDbVersion(entity.getVersion());
         document.setSuggestion(entity.getSuggestion());
-        
+
         dto = new SuggestionDTO();
         dto.setId(entity.getId());
         dto.setSuggestion(entity.getSuggestion());
@@ -65,6 +65,7 @@ public class SuggestionConverterImplTest {
         resultRowDTO.setEntityDTO(dto);
         resultRowDTO.setHighlights(highlights);
     }
+
     @AfterAll
     public static void tearDownClass() {
     }
@@ -83,7 +84,7 @@ public class SuggestionConverterImplTest {
     @Test
     public void testEntitytoDocument() {
         System.out.println("EntitytoDocument");
-       
+
         SuggestionConverterImpl instance = new SuggestionConverterImpl();
 
         SuggestionDocument result = instance.EntitytoDocument(entity);
@@ -108,7 +109,7 @@ public class SuggestionConverterImplTest {
     @Test
     public void testEntityToDTO() {
         System.out.println("EntityToDTO");
-        SuggestionConverterImpl instance = new SuggestionConverterImpl();  
+        SuggestionConverterImpl instance = new SuggestionConverterImpl();
         SuggestionDTO result = instance.EntityToDTO(entity);
         assertEquals(dto, result);
     }

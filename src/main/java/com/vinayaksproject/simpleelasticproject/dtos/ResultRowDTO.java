@@ -9,14 +9,16 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
-/**This call compose of entity DTO and highlight strings
+/**
+ * This call compose of entity DTO and highlight strings
  *
  * @author vinayak
- * @param <C> The entity abstract class we need to 
+ * @param <C> The entity abstract class we need to
  */
-public class ResultRowDTO<C extends AbstractDTO> extends AbstractDTO{
+public class ResultRowDTO<C extends AbstractDTO> extends AbstractDTO {
+
     private C entityDTO;
-    private Map<String,String[]> highlights;
+    private Map<String, String[]> highlights;
 
     public C getEntityDTO() {
         return entityDTO;
@@ -58,11 +60,10 @@ public class ResultRowDTO<C extends AbstractDTO> extends AbstractDTO{
         if (!Objects.equals(this.highlights.keySet(), other.highlights.keySet())) {
             return false;
         }
-        if(!this.highlights.entrySet().stream().allMatch((entry)->Arrays.equals(entry.getValue(),other.getHighlights().get(entry.getKey())))){
+        if (!this.highlights.entrySet().stream().allMatch((entry) -> Arrays.equals(entry.getValue(), other.getHighlights().get(entry.getKey())))) {
             return false;
         }
         return true;
     }
-
 
 }

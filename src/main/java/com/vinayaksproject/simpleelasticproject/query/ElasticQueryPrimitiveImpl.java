@@ -12,7 +12,9 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 
-/**This is primitive class for ElasticQuery.This implementation provides very few and primitive features.
+/**
+ * This is primitive class for ElasticQuery.This implementation provides very
+ * few and primitive features.
  *
  * @author vinayak
  */
@@ -31,6 +33,7 @@ public class ElasticQueryPrimitiveImpl extends ElasticQuery {
         private final SearchSourceBuilder searchSourceBuilder;
         private QueryBuilder queryBuilder;
         private HighlightBuilder highlightBuilder;
+
         public ElasticQueryPrimitiveBuilder() {
             searchSourceBuilder = new SearchSourceBuilder();
             containsQuery = false;
@@ -77,7 +80,7 @@ public class ElasticQueryPrimitiveImpl extends ElasticQuery {
         @Override
         public ElasticQueryBuilder<ElasticQueryPrimitiveImpl> buildHightLight(Map<String, Object> queryMap) {
             highlightBuilder = null;
-            if ( null != queryMap.get(QueryFields.HIGHLIGHT.getName())&&true==(Boolean)queryMap.get(QueryFields.HIGHLIGHT.getName())) {
+            if (null != queryMap.get(QueryFields.HIGHLIGHT.getName()) && true == (Boolean) queryMap.get(QueryFields.HIGHLIGHT.getName())) {
 
                 String field = (String) queryMap.get(QueryFields.SEARCH_FIELD.getName());
 
@@ -118,15 +121,14 @@ public class ElasticQueryPrimitiveImpl extends ElasticQuery {
         public ElasticQueryBuilder<ElasticQueryPrimitiveImpl> buildSort(Map<String, Object> queryMap) {
             return this;
         }
-        
-       QueryBuilder getQueryBuilder(){
+
+        QueryBuilder getQueryBuilder() {
             return queryBuilder;
         }
-        
-        HighlightBuilder getHighlightBuilder(){
+
+        HighlightBuilder getHighlightBuilder() {
             return highlightBuilder;
         }
-        
 
     }
 

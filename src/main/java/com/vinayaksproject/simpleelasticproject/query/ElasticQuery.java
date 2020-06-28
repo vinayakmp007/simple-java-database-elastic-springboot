@@ -7,7 +7,8 @@ package com.vinayaksproject.simpleelasticproject.query;
 
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
-/**This is the interface for all Elastic query classes
+/**
+ * This is the interface for all Elastic query classes
  *
  * @author vinayak
  */

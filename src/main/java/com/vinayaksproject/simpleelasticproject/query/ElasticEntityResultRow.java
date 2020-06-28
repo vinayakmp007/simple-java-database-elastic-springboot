@@ -7,7 +7,9 @@ package com.vinayaksproject.simpleelasticproject.query;
 
 import java.util.Map;
 
-/**This class is composition class to hold  the entity document and related info like highlights
+/**
+ * This class is composition class to hold the entity document and related info
+ * like highlights
  *
  * @author vinayak
  */

@@ -9,10 +9,11 @@ import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
 import com.vinayaksproject.simpleelasticproject.dtos.SuggestionDTO;
 import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 
-/**The converter class for suggestion Entity
+/**
+ * The converter class for suggestion Entity
  *
  * @author vinayak
  */
-public interface SuggestionConverter extends Converter<Suggestion,SuggestionDTO,SuggestionDocument> {
-    
+public interface SuggestionConverter extends Converter<Suggestion, SuggestionDTO, SuggestionDocument> {
+
 }

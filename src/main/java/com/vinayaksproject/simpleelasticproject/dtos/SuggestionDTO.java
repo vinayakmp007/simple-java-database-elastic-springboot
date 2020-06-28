@@ -7,16 +7,16 @@ package com.vinayaksproject.simpleelasticproject.dtos;
 
 import java.util.Objects;
 
-/**This class is used to transfer suggestion document to the client.
+/**
+ * This class is used to transfer suggestion document to the client.
  *
  * @author vinayak
  */
-public class SuggestionDTO extends AbstractDTO{
+public class SuggestionDTO extends AbstractDTO {
 
-   private String suggestion;
+    private String suggestion;
 
     private int id;
-    
 
     public String getSuggestion() {
         return suggestion;
@@ -33,7 +33,6 @@ public class SuggestionDTO extends AbstractDTO{
     public void setId(int id) {
         this.id = id;
     }
-
 
     @Override
     public String toString() {

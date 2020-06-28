@@ -7,13 +7,14 @@ package com.vinayaksproject.simpleelasticproject.dtos;
 
 import java.util.Map;
 
-/**This class is the DTO object for elastic search queries from client
+/**
+ * This class is the DTO object for elastic search queries from client
  *
  * @author vinayak
  */
 public class QueryDTO extends AbstractDTO {
 
-    Map<String,Object> query;
+    Map<String, Object> query;
     String aggregrateField;
     String limit;
 

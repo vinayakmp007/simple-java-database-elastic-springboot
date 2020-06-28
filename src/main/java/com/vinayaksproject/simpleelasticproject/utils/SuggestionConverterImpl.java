@@ -15,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
-/**This class used for conversion of Suggestion Entity
+/**
+ * This class used for conversion of Suggestion Entity
  *
  * @author vinayak
  */
@@ -23,23 +24,23 @@ import org.springframework.stereotype.Service;
 public final class SuggestionConverterImpl implements SuggestionConverter {
 
     @Override
-    public  SuggestionDocument EntitytoDocument(Suggestion entity) {
+    public SuggestionDocument EntitytoDocument(Suggestion entity) {
         SuggestionDocument document = new SuggestionDocument();
         if (entity == null) {
             throw new IllegalArgumentException("The argument Suggestion cannot be null");
         }
         document.setId(String.valueOf(entity.getId()));
         document.setSuggestion(entity.getSuggestion());
-        document.setDbCreationDate(entity.getCreationDate()!=null? new Timestamp(entity.getCreationDate().getTime()):null);
-        document.setDbLastUpdateDate(entity.getLastUpdateDate()!=null?new Timestamp(entity.getLastUpdateDate().getTime()):null);
+        document.setDbCreationDate(entity.getCreationDate() != null ? new Timestamp(entity.getCreationDate().getTime()) : null);
+        document.setDbLastUpdateDate(entity.getLastUpdateDate() != null ? new Timestamp(entity.getLastUpdateDate().getTime()) : null);
         document.setDbVersion(entity.getVersion());
         document.setDbdeleted(entity.isDeleted());
         return document;
     }
 
     @Override
-    public SuggestionDTO DocumentoDTO(SuggestionDocument document){
-         if (document == null) {
+    public SuggestionDTO DocumentoDTO(SuggestionDocument document) {
+        if (document == null) {
             throw new IllegalArgumentException("The argument document cannot be null");
         }
         SuggestionDTO suggestionDTO = new SuggestionDTO();
@@ -47,11 +48,10 @@ public final class SuggestionConverterImpl implements SuggestionConverter {
         suggestionDTO.setSuggestion(document.getSuggestion());
         return suggestionDTO;
     }
-    
-    
+
     @Override
-    public SuggestionDTO EntityToDTO(Suggestion entity){
-         if (entity == null) {
+    public SuggestionDTO EntityToDTO(Suggestion entity) {
+        if (entity == null) {
             throw new IllegalArgumentException("The argument Suggestion cannot be null");
         }
         return DocumentoDTO(EntitytoDocument(entity));
@@ -59,16 +59,18 @@ public final class SuggestionConverterImpl implements SuggestionConverter {
 
     @Override
     public ResultRowDTO<SuggestionDTO> ResultRowToDTO(ElasticEntityResultRow<SuggestionDocument> resultRow) {
-      
-         if (resultRow == null) {
+
+        if (resultRow == null) {
             throw new IllegalArgumentException("The argument resultRow cannot be null");
-        }ResultRowDTO result= new ResultRowDTO();
-       result.setEntityDTO(DocumentoDTO(resultRow.getObject()));
-       Map tempMap = new HashMap<String,String[]>();
-       resultRow.getHighlight().forEach((k,v)->{tempMap.put(k, v.clone());});
-       result.setHighlights(tempMap);
+        }
+        ResultRowDTO result = new ResultRowDTO();
+        result.setEntityDTO(DocumentoDTO(resultRow.getObject()));
+        Map tempMap = new HashMap<String, String[]>();
+        resultRow.getHighlight().forEach((k, v) -> {
+            tempMap.put(k, v.clone());
+        });
+        result.setHighlights(tempMap);
         return result;
     }
 
-   
 }

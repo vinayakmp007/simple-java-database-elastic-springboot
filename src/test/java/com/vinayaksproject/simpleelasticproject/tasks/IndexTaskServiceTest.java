@@ -6,17 +6,22 @@
 package com.vinayaksproject.simpleelasticproject.tasks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinayaksproject.simpleelasticproject.JobServerConfig;
 import com.vinayaksproject.simpleelasticproject.dao.ElasticSuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.dao.IndexTaskDAO;
 import com.vinayaksproject.simpleelasticproject.dao.SuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
+import com.vinayaksproject.simpleelasticproject.enums.IndexJobType;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -28,11 +33,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -59,6 +64,9 @@ public class IndexTaskServiceTest {
 
     @Mock
     ThreadPoolExecutor executor;
+
+    @Mock
+    ObjectMapper defaultObjectMapper;
 
     @InjectMocks
     IndexTaskService service;
@@ -184,13 +192,15 @@ public class IndexTaskServiceTest {
 
     /**
      * Test of pollForTasks method, of class IndexTaskService.
+     *
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
      */
     @Test
     public void testPollForTasks() throws JsonProcessingException {
         System.out.println("pollForTasks");
 
         List<TaskEntry> list = new ArrayList();
-        TaskEntry task = null;
+        TaskEntry task;
         service.setTaskFactory(taskFactory);
         service.setExecutor(executor);
         for (int i = 0; i < 10; i++) {
@@ -216,4 +226,35 @@ public class IndexTaskServiceTest {
 
     }
 
+    @Test
+    public void testCreateTaskEntry() throws JsonProcessingException {
+        TaskEntry taskEntry = new TaskEntry();
+        Map map = new HashMap<String, Object>();
+        taskEntry.setId(1);
+        taskEntry.setServerName("testserv");
+        taskEntry.setStatus(JobStatus.SUCCESSFUL);
+        taskEntry.setCreationDate(new Timestamp(Instant.now().toEpochMilli()));
+        taskEntry.setTaskType(IndexJobType.UPDATE_INDEX);
+        when(indexdao.findLatestOfJobTypeAndStatus(IndexJobType.UPDATE_INDEX, JobStatus.SUCCESSFUL)).thenReturn(taskEntry);
+        when(indexdao.findLatestOfJobTypeAndStatus(IndexJobType.FULL_INDEX, JobStatus.SUCCESSFUL)).thenReturn(taskEntry);
+        when(indexdao.save(isA(TaskEntry.class))).thenReturn(taskEntry);
+        service.setDefaultObjectMapper(defaultObjectMapper);
+        assertEquals(1, service.createTaskEntry(IndexJobType.FULL_INDEX, map));
+        try {
+            assertEquals(1, service.createTaskEntry(IndexJobType.INSTANT_UPDATE, map));
+            fail("The exception was not thrown");
+        } catch (Exception ex) {
+            assertTrue(ex instanceof IllegalArgumentException);
+        }
+        try {
+            List idList = new ArrayList<Integer>();
+            idList.add(324);
+            idList.add(122);
+            map.put("idList", idList);
+            assertEquals(1, service.createTaskEntry(IndexJobType.INSTANT_UPDATE, map));
+        } catch (Exception ex) {
+            fail("An exception was thrown");
+        }
+        assertEquals(1, service.createTaskEntry(IndexJobType.UPDATE_INDEX, map));
+    }
 }

@@ -10,8 +10,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinayaksproject.simpleelasticproject.JobServerConfig;
 import com.vinayaksproject.simpleelasticproject.dao.IndexTaskDAO;
 import com.vinayaksproject.simpleelasticproject.entity.TaskEntry;
+import com.vinayaksproject.simpleelasticproject.enums.IndexJobType;
 import com.vinayaksproject.simpleelasticproject.enums.JobStatus;
+import com.vinayaksproject.simpleelasticproject.enums.ParameterFieldNames;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -171,6 +178,57 @@ public class IndexTaskService implements TaskService {
      */
     protected void setTaskMap(ConcurrentHashMap<Integer, Future> taskMap) {
         this.taskMap = taskMap;
+    }
+
+    @Override
+    public int createTaskEntry(IndexJobType jobType, Map parameterMap) {
+        TaskEntry taskEntry = new TaskEntry();
+        Map argumentMap = new HashMap<String, Object>();
+        switch (jobType) {
+            case FULL_INDEX:
+
+                break;
+            case UPDATE_INDEX:
+                long lastExecutedTime;
+                TaskEntry lastSuccessfulJob = indexTaskDAO.findLatestOfJobTypeAndStatus(IndexJobType.UPDATE_INDEX, JobStatus.SUCCESSFUL);
+                if (lastSuccessfulJob == null) {
+                    lastSuccessfulJob = indexTaskDAO.findLatestOfJobTypeAndStatus(IndexJobType.FULL_INDEX, JobStatus.SUCCESSFUL);
+                }
+                lastExecutedTime = (lastSuccessfulJob != null)
+                        ? lastSuccessfulJob.getCreationDate().getTime()
+                        : Timestamp.from(Instant.MIN).getTime();
+
+                argumentMap.put(ParameterFieldNames.lastIndexTime, new Timestamp(lastExecutedTime));
+                break;
+            case INSTANT_UPDATE:
+                List<Integer> suggestionList = new ArrayList<>();
+                if (parameterMap != null && !parameterMap.containsKey("idList") || parameterMap.get("idList") == null) {
+                    throw new IllegalArgumentException("The argument  map didn't contain list of ids for Instant Update Task");
+                }
+                List<Integer> itemList = (List) parameterMap.get("idList");
+                for (Integer i : itemList) {
+                    if (i == null) {
+                        continue;
+                    }
+                    suggestionList.add(i);
+                }
+                argumentMap.put(ParameterFieldNames.suggestionids, suggestionList);
+                break;
+            default:
+                throw new IllegalArgumentException("The jobtype " + jobType + " is not supported");
+
+        }
+
+        try {
+            taskEntry.setParameters(defaultObjectMapper.writeValueAsString(argumentMap));
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(IndexTaskService.class.getName()).log(Level.SEVERE, "JsonProcessing failed", ex);
+            throw new IllegalArgumentException("converting map to json failed for " + parameterMap, ex);
+        }
+        taskEntry.setTaskType(jobType);
+        taskEntry.setStatus(JobStatus.CREATED);
+        taskEntry = indexTaskDAO.save(taskEntry);
+        return taskEntry.getId();
     }
 
 }

@@ -19,12 +19,39 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("jobserver")
 public class JobServerConfig {
 
-    protected String name;
+    private String name;
     private int threads;
     private int bulkDocCount;
     private int bulkSize;
     private int pageSize;
     private int maxTasksToPoll;
+    private boolean scheduleEnabled;
+    private boolean pollingEnabled;
+
+    public boolean isScheduleEnabled() {
+        return scheduleEnabled;
+    }
+
+    public void setScheduleEnabled(boolean scheduleEnabled) {
+        this.scheduleEnabled = scheduleEnabled;
+    }
+
+    public boolean isPollingEnabled() {
+        return pollingEnabled;
+    }
+
+    public void setPollingEnabled(boolean pollingEnabled) {
+        this.pollingEnabled = pollingEnabled;
+    }
+
+    public boolean isPollingIntervalInMillis() {
+        return pollingIntervalInMillis;
+    }
+
+    public void setPollingIntervalInMillis(boolean pollingIntervalInMillis) {
+        this.pollingIntervalInMillis = pollingIntervalInMillis;
+    }
+    private boolean pollingIntervalInMillis;
 
     /**
      * @return the name
@@ -121,4 +148,5 @@ public class JobServerConfig {
     protected void setMaxTasksToPoll(int maxTasksToPoll) {
         this.maxTasksToPoll = maxTasksToPoll;
     }
+
 }

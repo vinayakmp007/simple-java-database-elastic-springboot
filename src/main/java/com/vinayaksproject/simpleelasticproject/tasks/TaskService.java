@@ -5,7 +5,9 @@
  */
 package com.vinayaksproject.simpleelasticproject.tasks;
 
+import com.vinayaksproject.simpleelasticproject.enums.IndexJobType;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is service class for handling tasks
@@ -23,4 +25,12 @@ public interface TaskService {
     public AbstractTask generateExecutableTask(com.vinayaksproject.simpleelasticproject.entity.TaskEntry task);
 
     public void pollForTasks();
+
+    /**
+     *
+     * @param jobType
+     * @param parameterMap
+     * @return
+     */
+    public int createTaskEntry(IndexJobType jobType, Map parameterMap);
 }

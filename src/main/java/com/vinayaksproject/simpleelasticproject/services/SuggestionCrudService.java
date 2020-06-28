@@ -9,11 +9,14 @@ import com.vinayaksproject.simpleelasticproject.dao.SuggestionDAO;
 import com.vinayaksproject.simpleelasticproject.entity.Suggestion;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**This class provides crud service for suggestion entity
+/**
+ * This class provides crud service for suggestion entity
  *
  * @author vinayak
  */
+@Service
 public class SuggestionCrudService implements CrudService<Suggestion> {
 
     @Autowired

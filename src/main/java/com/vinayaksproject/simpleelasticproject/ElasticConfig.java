@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
+ * The configuration class that contains elastic related properties
  *
  * @author vinayak
  */
