@@ -33,4 +33,6 @@ public interface Converter<T extends EntityAudit, U extends AbstractDTO, W exten
     U EntityToDTO(T entity);
 
     ResultRowDTO<U> ResultRowToDTO(ElasticEntityResultRow<W> resultRow);
+
+    T DTOEntity(U dto);
 }
