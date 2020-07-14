@@ -92,7 +92,7 @@ public class IndexTaskDAOTest {
 
         for (TaskEntry task : result) {
             task.setServerName(jobServer.getName());
-            instance.lockTaskforServer("aNotherServer", task.getId(), JobStatus.CREATED);
+            instance.lockTaskforServer("aNotherServer", task.getId(), JobStatus.CREATED, JobStatus.ASSIGNED);
             try {
                 instance.save(task);
                 fail("An ObjectOptimisticLockingFailureException shouldbe thrown");

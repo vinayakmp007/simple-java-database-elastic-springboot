@@ -83,7 +83,7 @@ public class EntityChangeEventListenerImplTest {
     public void testOnApplicationEvent() {
         System.out.println("onApplicationEvent");
         Suggestion entity = new Suggestion();
-        EntityChangeEvent e = new EntityChangeEvent(this, "server", entity, EntityChangeEventType.INSERT);
+        EntityChangeEvent e = new EntityChangeEvent(this, "server", entity, EntityChangeEventType.POST_INSERT);
         instance.onApplicationEvent(e);
         verify(taskManagementService, times(1)).scheduleTask(eq(IndexJobType.INSTANT_UPDATE), eq(-1l), isA(Map.class));
     }
