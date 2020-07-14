@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @author vinayak
  */
 @Service
-public class SuggestionCrudService implements CrudService<Suggestion> {
+public class SuggestionCrudService implements EntityCRUDService<Suggestion> {
 
     @Autowired
     SuggestionDAO suggestiondao;
