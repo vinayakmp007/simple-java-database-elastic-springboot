@@ -11,6 +11,7 @@ package com.vinayaksproject.simpleelasticproject.enums;
  */
 public enum JobStatus {
     CREATED,
+    ASSIGNED,
     RUNNING,
     CANCELLING,
     CANCELLED,
