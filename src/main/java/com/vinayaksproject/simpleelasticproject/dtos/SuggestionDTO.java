@@ -67,5 +67,4 @@ public class SuggestionDTO extends AbstractDTO {
         }
         return true;
     }
-
 }

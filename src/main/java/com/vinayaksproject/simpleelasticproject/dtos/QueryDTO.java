@@ -18,4 +18,28 @@ public class QueryDTO extends AbstractDTO {
     String aggregrateField;
     String limit;
 
+    public Map<String, Object> getQuery() {
+        return query;
+    }
+
+    public void setQuery(Map<String, Object> query) {
+        this.query = query;
+    }
+
+    public String getAggregrateField() {
+        return aggregrateField;
+    }
+
+    public void setAggregrateField(String aggregrateField) {
+        this.aggregrateField = aggregrateField;
+    }
+
+    public String getLimit() {
+        return limit;
+    }
+
+    public void setLimit(String limit) {
+        this.limit = limit;
+    }
+
 }
