@@ -33,9 +33,10 @@ public class IndexTaskExecutorImpl implements IndexTaskExecutor {
 
     @Override
     public Object call() throws Exception {
+        taskMetaData = indexTaskDAO.findById(taskMetaData.getId()).get();
         taskMetaData.setStartTime(new Timestamp(System.currentTimeMillis()));
         long start = System.currentTimeMillis();
-        indexTaskDAO.save(taskMetaData);
+        taskMetaData=indexTaskDAO.save(taskMetaData);
         try {
             started = true;
             task.initialize();
@@ -43,14 +44,14 @@ public class IndexTaskExecutorImpl implements IndexTaskExecutor {
             taskMetaData.setStatus(JobStatus.SUCCESSFUL);
             taskMetaData.setDetails("Task ended Succesfully");
 
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             taskMetaData.setStatus(JobStatus.FAILED);
             taskMetaData.setDetails(ex.getLocalizedMessage());
         } finally {
             taskMetaData.setEndTime(new Timestamp(System.currentTimeMillis()));
             long stop = System.currentTimeMillis();
             executiontime = stop - start;
-            indexTaskDAO.save(taskMetaData);
+            taskMetaData=indexTaskDAO.save(taskMetaData);
             task.destroy();
         }
 

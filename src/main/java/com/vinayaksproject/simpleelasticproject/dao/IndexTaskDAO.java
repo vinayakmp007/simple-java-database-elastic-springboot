@@ -32,9 +32,9 @@ public interface IndexTaskDAO extends CrudRepository<TaskEntry, Integer> {
     public void deleteAllInSingleQuery();
 
     @Modifying
-    @Query("update tasks set version=version+1,serverName=:serverName   where id=:taskId and status=:status")
+    @Query("update tasks set version=version+1,serverName=:serverName,status=:newStatus   where id=:taskId and status=:status")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void lockTaskforServer(String serverName, Integer taskId, JobStatus status);
+    public void lockTaskforServer(String serverName, Integer taskId, JobStatus status,JobStatus newStatus);
 
     @Query("SELECT t FROM tasks t WHERE t.id=(SELECT max(t.id) FROM tasks t WHERE t.status =:status and t.taskType=:jobType)")
     public TaskEntry findLatestOfJobTypeAndStatus(IndexJobType jobType, JobStatus status);

@@ -44,7 +44,7 @@ import org.springframework.stereotype.Service;
 public class TaskManagementServiceImpl implements TaskManagementService {
 
     private static final long INITIAL_DELAY = 1000;
-    long pollingPeriod;
+    private long pollingPeriod;
     TaskService indexTaskService;
     ScheduledExecutorService scheduler;
     private boolean scheduleEnabled;
@@ -54,7 +54,6 @@ public class TaskManagementServiceImpl implements TaskManagementService {
     @Autowired
     TaskManagementServiceImpl(TaskService indexTaskService, JobServerConfig config) {
         this.indexTaskService = indexTaskService;
-        pollingPeriod = 2000;
 
         this.config = config;
         initialize();
@@ -72,6 +71,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduleEnabled = config.isScheduleEnabled();
         pollingEnabled = config.isPollingEnabled();
+        pollingPeriod= config.getPollingIntervalInMillis();
     }
 
     @Override
