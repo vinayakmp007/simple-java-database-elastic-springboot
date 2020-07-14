@@ -59,7 +59,7 @@ public class IndexTaskService implements TaskService {
 
     @Override
     public boolean lockTasktoServer(com.vinayaksproject.simpleelasticproject.entity.TaskEntry task) {
-        getIndexTaskDAO().lockTaskforServer(getJobServer().getName(), task.getId(), JobStatus.CREATED,JobStatus.ASSIGNED);
+        getIndexTaskDAO().lockTaskforServer(getJobServer().getName(), task.getId(), JobStatus.CREATED, JobStatus.ASSIGNED);
         Optional<TaskEntry> updatedTask = getIndexTaskDAO().findById(task.getId());
         return updatedTask.isPresent() && getJobServer().getName().equals(updatedTask.get().getServerName());
     }

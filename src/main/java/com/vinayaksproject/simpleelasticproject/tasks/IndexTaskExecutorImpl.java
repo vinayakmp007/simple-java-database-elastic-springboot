@@ -36,7 +36,7 @@ public class IndexTaskExecutorImpl implements IndexTaskExecutor {
         taskMetaData = indexTaskDAO.findById(taskMetaData.getId()).get();
         taskMetaData.setStartTime(new Timestamp(System.currentTimeMillis()));
         long start = System.currentTimeMillis();
-        taskMetaData=indexTaskDAO.save(taskMetaData);
+        taskMetaData = indexTaskDAO.save(taskMetaData);
         try {
             started = true;
             task.initialize();
@@ -51,7 +51,7 @@ public class IndexTaskExecutorImpl implements IndexTaskExecutor {
             taskMetaData.setEndTime(new Timestamp(System.currentTimeMillis()));
             long stop = System.currentTimeMillis();
             executiontime = stop - start;
-            taskMetaData=indexTaskDAO.save(taskMetaData);
+            taskMetaData = indexTaskDAO.save(taskMetaData);
             task.destroy();
         }
 

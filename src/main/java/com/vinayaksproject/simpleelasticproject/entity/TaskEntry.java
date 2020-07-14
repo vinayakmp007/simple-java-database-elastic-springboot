@@ -187,8 +187,8 @@ public class TaskEntry extends EntityAudit {
     @Override
     public Object clone() throws CloneNotSupportedException {
         TaskEntry cloned = (TaskEntry) super.clone();
-        cloned.startTime = new Timestamp(startTime.getTime());
-        cloned.endTime = new Timestamp(endTime.getTime());
+        cloned.startTime = startTime != null ? new Timestamp(startTime.getTime()) : null;
+        cloned.endTime = endTime != null ? new Timestamp(endTime.getTime()) : null;
         return cloned;
     }
 }

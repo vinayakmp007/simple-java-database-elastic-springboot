@@ -28,6 +28,7 @@ public class JobServerConfig {
     private boolean scheduleEnabled;
     private boolean pollingEnabled;
     private long pollingIntervalInMillis;
+
     public boolean isScheduleEnabled() {
         return scheduleEnabled;
     }
@@ -51,7 +52,6 @@ public class JobServerConfig {
     public void setPollingIntervalInMillis(long pollingIntervalInMillis) {
         this.pollingIntervalInMillis = pollingIntervalInMillis;
     }
-    
 
     /**
      * @return the name

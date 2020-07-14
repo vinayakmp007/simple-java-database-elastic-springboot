@@ -71,7 +71,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduleEnabled = config.isScheduleEnabled();
         pollingEnabled = config.isPollingEnabled();
-        pollingPeriod= config.getPollingIntervalInMillis();
+        pollingPeriod = config.getPollingIntervalInMillis();
     }
 
     @Override

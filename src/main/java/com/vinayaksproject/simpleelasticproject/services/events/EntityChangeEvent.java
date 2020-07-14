@@ -68,7 +68,7 @@ public class EntityChangeEvent extends Event {
         EntityAudit tempEntity;
         try {
             tempEntity = (EntityAudit) entity.clone();
-        } catch (CloneNotSupportedException |NullPointerException ex) {
+        } catch (CloneNotSupportedException | NullPointerException ex) {
             Logger.getLogger(EntityChangeEvent.class.getName()).log(Level.SEVERE, "Cloning of Entity failed using the same reference", ex);
             tempEntity = entity;
         }

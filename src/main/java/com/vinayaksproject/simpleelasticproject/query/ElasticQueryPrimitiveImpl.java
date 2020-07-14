@@ -118,7 +118,7 @@ public class ElasticQueryPrimitiveImpl extends ElasticQuery {
         }
 
         @Override
-        public ElasticQueryBuilder<ElasticQueryPrimitiveImpl> buildSort(Map<String, Object> queryMap) {
+        public ElasticQueryBuilder<ElasticQueryPrimitiveImpl> buildSort(Map<String, Object> queryMap) {  //TODO
             return this;
         }
 
