@@ -27,7 +27,7 @@ public class JobServerConfig {
     private int maxTasksToPoll;
     private boolean scheduleEnabled;
     private boolean pollingEnabled;
-
+    private long pollingIntervalInMillis;
     public boolean isScheduleEnabled() {
         return scheduleEnabled;
     }
@@ -44,14 +44,14 @@ public class JobServerConfig {
         this.pollingEnabled = pollingEnabled;
     }
 
-    public boolean isPollingIntervalInMillis() {
+    public long getPollingIntervalInMillis() {
         return pollingIntervalInMillis;
     }
 
-    public void setPollingIntervalInMillis(boolean pollingIntervalInMillis) {
+    public void setPollingIntervalInMillis(long pollingIntervalInMillis) {
         this.pollingIntervalInMillis = pollingIntervalInMillis;
     }
-    private boolean pollingIntervalInMillis;
+    
 
     /**
      * @return the name
