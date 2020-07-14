@@ -48,7 +48,7 @@ public class EntityChangeEventListenerImpl implements EntityChangeEventListener 
     public void onApplicationEvent(EntityChangeEvent e) {
         Map argumentMap = new HashMap<String, Object>();
         List<Integer> idList = new ArrayList();
-        if (e != null && e.getEntity() instanceof Suggestion) {
+        if (e != null && e.getEntity() instanceof Suggestion && e.getType().isPostChange()) {
             Suggestion suggestion = (Suggestion) e.getEntity();
             idList.add(suggestion.getId());
             argumentMap.put("idList", idList);

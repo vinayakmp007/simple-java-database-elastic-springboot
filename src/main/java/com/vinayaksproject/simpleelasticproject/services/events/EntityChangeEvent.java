@@ -35,11 +35,29 @@ import java.util.logging.Logger;
 public class EntityChangeEvent extends Event {
 
     public enum EntityChangeEventType {
-        INSERT,
-        DELETE,
-        UPDATE,
-        MIXED
+        PRE_INSERT(true, false),
+        PRE_DELETE(true, false),
+        PRE_UPDATE(true, false),
+        POST_INSERT(false, true),
+        POST_DELETE(false, true),
+        POST_UPDATE(false, true),
+        POST_LOAD(false, true),
+        MIXED(true, true);
 
+        EntityChangeEventType(boolean preChange, boolean postChange) {
+            this.postChange = postChange;
+            this.preChange = preChange;
+        }
+        private final boolean postChange;
+        private final boolean preChange;
+
+        public boolean isPostChange() {
+            return postChange;
+        }
+
+        public boolean isPreChange() {
+            return preChange;
+        }
     }
 
     private final EntityAudit entity;
@@ -50,7 +68,7 @@ public class EntityChangeEvent extends Event {
         EntityAudit tempEntity;
         try {
             tempEntity = (EntityAudit) entity.clone();
-        } catch (CloneNotSupportedException ex) {
+        } catch (CloneNotSupportedException |NullPointerException ex) {
             Logger.getLogger(EntityChangeEvent.class.getName()).log(Level.SEVERE, "Cloning of Entity failed using the same reference", ex);
             tempEntity = entity;
         }
