@@ -25,20 +25,42 @@ services:
     networks:
       - simplenet
       
-  suggestionbox:
-    image: springio/simple-elastic-project
+  suggestionbox1:
+    image: springio/simple-elastic-project:latest
     depends_on:
       - mysql
       - elasticsearch
     ports:
-      - 8080:8080
+      - 8081:8080
     environment:
       - DATABASE_HOST=mysql
       - DATABASE_USER=suggestionuser
       - DATABASE_PASSWORD=passdb
       - DATABASE_NAME=suggestion
       - DATABASE_PORT=3306
-      - ELASTIC_SEARCH_URL=http://elasticsearch:9200/_bulk
+      - ELASTIC_SEARCH_HOST=elasticsearch
+      - ELASTIC_SEARCH_PORT=9200
+      - SERVER_NAME=server_one
+      - GENERATE_TASKS=true
+    networks:
+      - simplenet
+  suggestionbox2:
+    image: springio/simple-elastic-project:latest
+    depends_on:
+      - mysql
+      - elasticsearch
+    ports:
+      - 8082:8080
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_USER=suggestionuser
+      - DATABASE_PASSWORD=passdb
+      - DATABASE_NAME=suggestion
+      - DATABASE_PORT=3306
+      - ELASTIC_SEARCH_HOST=elasticsearch
+      - ELASTIC_SEARCH_PORT=9200
+      - SERVER_NAME=server_two
+      - GENERATE_TASKS=false
     networks:
       - simplenet
 networks:
