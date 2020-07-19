@@ -77,7 +77,7 @@ public final class SuggestionConverterImpl implements SuggestionConverter {
     public Suggestion DTOEntity(SuggestionDTO dto) {
         SuggestionDTO newDTO = new SuggestionDTO();       //implenet copy constructor for suggestion
         newDTO.setSuggestion(dto.getSuggestion());
-        newDTO.setId(newDTO.getId());
+        newDTO.setId(dto.getId());
 
         Suggestion entity = new Suggestion();
         if (dto.getId() != 0) {

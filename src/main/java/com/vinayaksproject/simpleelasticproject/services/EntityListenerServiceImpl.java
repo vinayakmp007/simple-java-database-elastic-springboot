@@ -52,6 +52,7 @@ public class EntityListenerServiceImpl implements EntityListenerService {
     }
 
     @Override
+    @PostPersist
     public void entityPostPersist(EntityAudit entity) {
         if (publisher != null) {
             publisher.publishEntityChangeEvent(this, config.getName(), entity, EntityChangeEvent.EntityChangeEventType.POST_INSERT);
