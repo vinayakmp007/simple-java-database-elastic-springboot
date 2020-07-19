@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,8 @@ public interface IndexTaskDAO extends CrudRepository<TaskEntry, Integer> {
     @Modifying
     @Query("update tasks set version=version+1,serverName=:serverName,status=:newStatus   where id=:taskId and status=:status")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void lockTaskforServer(String serverName, Integer taskId, JobStatus status, JobStatus newStatus);
+    public void lockTaskforServer(@Param("serverName")String serverName, @Param("taskId")Integer taskId, @Param("status")JobStatus status,@Param("newStatus") JobStatus newStatus);
 
     @Query("SELECT t FROM tasks t WHERE t.id=(SELECT max(t.id) FROM tasks t WHERE t.status =:status and t.taskType=:jobType)")
-    public TaskEntry findLatestOfJobTypeAndStatus(IndexJobType jobType, JobStatus status);
+    public TaskEntry findLatestOfJobTypeAndStatus( @Param("jobType") IndexJobType jobType, @Param("status")JobStatus status);
 }

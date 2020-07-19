@@ -25,8 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -41,6 +41,7 @@ import org.springframework.stereotype.Service;
 public class IndexTaskService implements TaskService {
 
     private IndexTaskDAO indexTaskDAO;
+    private static final Logger LOG = LoggerFactory.getLogger(IndexTaskService.class.getName());
 
     private JobServerConfig jobServer;
 
@@ -75,36 +76,52 @@ public class IndexTaskService implements TaskService {
         try {
             return getTaskFactory().NewIndexTask(task);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(IndexTaskService.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Generating TaskFailed", ex);
         }
         return null;
     }
 
     @Override
     public void executeTask(AbstractTask task) {
-
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("executing task {0}", task.getTaskid());
+        }
         Future<TaskEntry> result = getExecutor().submit(getTaskFactory().NewIndexTaskExecutorImpl(task, getIndexTaskDAO().findById(task.getTaskid()).get()));
         getTaskMap().put(task.getTaskid(), result);
     }
 
     @Override
     public void pollForTasks() {
-        int tasks = (int) jobServer.getNumberOfTasksAllowed();
-        for (Iterator<Map.Entry<Integer, Future>> onGoingTasksIter = getTaskMap().entrySet().iterator(); onGoingTasksIter.hasNext();) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Polling for tasks");
+        }
+        try {
+            int slotsAvailable = (int) jobServer.getNumberOfTasksAllowed();
+            for (Iterator<Map.Entry<Integer, Future>> onGoingTasksIter = getTaskMap().entrySet().iterator(); onGoingTasksIter.hasNext();) {
 
-            Future<TaskEntry> task = (Future<TaskEntry>) onGoingTasksIter.next();
-            if (task.isCancelled() || task.isDone()) {
-                onGoingTasksIter.remove();
+                Future<TaskEntry> task = onGoingTasksIter.next().getValue();
+                if (task.isCancelled() || task.isDone()) {
+                    onGoingTasksIter.remove();
+                }
+                slotsAvailable = (int) (jobServer.getNumberOfTasksAllowed() - getTaskMap().mappingCount());
             }
-            tasks = (int) (jobServer.getNumberOfTasksAllowed() - getTaskMap().mappingCount());
-        }
-        if (tasks > 0) {
-            List<TaskEntry> newTaskEntries = getAvailableTasks(tasks);
-            newTaskEntries.stream().filter((entry) -> (lockTasktoServer(entry))).map((entry) -> getIndexTaskDAO().findById(entry.getId())).map((updatedTask) -> generateExecutableTask(updatedTask.get())).forEachOrdered((newTask) -> {
-                executeTask(newTask);
-            });
-        }
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Tasks allowed : {0}", slotsAvailable);
+            }
+            if (slotsAvailable > 0) {
 
+                List<TaskEntry> newTaskEntries = getAvailableTasks(slotsAvailable);
+                newTaskEntries.stream().filter((entry) -> (lockTasktoServer(entry))).map((entry) -> getIndexTaskDAO().findById(entry.getId())).map((updatedTask) -> generateExecutableTask(updatedTask.get())).forEachOrdered((newTask) -> {
+                    executeTask(newTask);
+                });
+
+            }
+        } catch (Exception ex) {
+            LOG.error("Polling failed {0}", ex);
+        }
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Polling for tasks completed");
+        }
     }
 
     /**
@@ -235,7 +252,7 @@ public class IndexTaskService implements TaskService {
         try {
             taskEntry.setParameters(defaultObjectMapper.writeValueAsString(argumentMap));
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(IndexTaskService.class.getName()).log(Level.SEVERE, "JsonProcessing failed", ex);
+            LOG.error("JsonProcessing failed", ex);
             throw new IllegalArgumentException("converting map to json failed for " + parameterMap, ex);
         }
         taskEntry.setTaskType(jobType);
