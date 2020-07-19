@@ -24,6 +24,7 @@ public class SimpleElasticSuggestionBoxApplication {
 
     private static void initializeTasks(ApplicationContext applicationContext) {
         TaskManagementService service = applicationContext.getBean(TaskManagementServiceImpl.class);
+        service.scheduleTask(IndexJobType.FULL_INDEX, -1, new HashMap());
         JobServerConfig config = applicationContext.getBean(JobServerConfig.class);
         service.schedulePollFortasks();
         service.scheduleTask(IndexJobType.UPDATE_INDEX, 300000, new HashMap());
