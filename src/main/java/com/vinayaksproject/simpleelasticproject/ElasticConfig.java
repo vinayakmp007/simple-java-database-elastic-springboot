@@ -184,4 +184,9 @@ public class ElasticConfig {
         this.esShardsNo = esShardsNo;
     }
 
+    @Override
+    public String toString() {
+        return "ElasticConfig{" + "EsHost=" + EsHost + ", EsProtocol=" + EsProtocol + ", EsPort=" + EsPort + ", EsIndexName=" + EsIndexName + ", EsDoctypeName=" + EsDoctypeName + ", EsClusterName=" + EsClusterName + ", clusterNodes=" + clusterNodes + ", esShardsNo=" + esShardsNo + '}';
+    }
+
 }

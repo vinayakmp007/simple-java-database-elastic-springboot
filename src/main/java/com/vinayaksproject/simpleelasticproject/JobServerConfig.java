@@ -45,6 +45,7 @@ public class JobServerConfig {
     private int pageSize;
     private int maxTasksToPoll;
     private boolean scheduleEnabled;
+    private boolean generateScheduleTasks;
     private boolean pollingEnabled;
     private long pollingIntervalInMillis;
     private long numberOfTasksAllowed;
@@ -166,15 +167,30 @@ public class JobServerConfig {
     /**
      * @return the maxTasksToPoll
      */
-    protected int getMaxTasksToPoll() {
+    public int getMaxTasksToPoll() {
         return maxTasksToPoll;
     }
 
     /**
      * @param maxTasksToPoll the maxTasksToPoll to set
      */
-    protected void setMaxTasksToPoll(int maxTasksToPoll) {
+    public void setMaxTasksToPoll(int maxTasksToPoll) {
         this.maxTasksToPoll = maxTasksToPoll;
     }
+
+    public boolean isGenerateScheduleTasks() {
+        return generateScheduleTasks;
+    }
+
+    public void setGenerateScheduleTasks(boolean generateScheduleTasks) {
+        this.generateScheduleTasks = generateScheduleTasks;
+    }
+
+    @Override
+    public String toString() {
+        return "JobServerConfig{" + "name=" + name + ", threads=" + threads + ", bulkDocCount=" + bulkDocCount + ", bulkSize=" + bulkSize + ", pageSize=" + pageSize + ", maxTasksToPoll=" + maxTasksToPoll + ", scheduleEnabled=" + scheduleEnabled + ", generateScheduleTasks=" + generateScheduleTasks + ", pollingEnabled=" + pollingEnabled + ", pollingIntervalInMillis=" + pollingIntervalInMillis + ", numberOfTasksAllowed=" + numberOfTasksAllowed + '}';
+    }
+
+
 
 }
