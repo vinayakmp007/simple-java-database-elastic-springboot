@@ -28,8 +28,8 @@ import com.vinayaksproject.simpleelasticproject.document.SuggestionDocument;
 import com.vinayaksproject.simpleelasticproject.query.ElasticQuery;
 import com.vinayaksproject.simpleelasticproject.query.ElasticResult;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SuggestionDocumentCRUDServiceImpl implements SuggestionDocumentCRUDService {
 
+    static Logger log =  LoggerFactory.getLogger(SuggestionDocumentCRUDServiceImpl.class.getName());
     @Autowired
     SuggestionDocumentDAO dao;
 
@@ -50,7 +51,7 @@ public class SuggestionDocumentCRUDServiceImpl implements SuggestionDocumentCRUD
         try {
             doc = dao.get(id);
         } catch (IOException ex) {
-            Logger.getLogger(SuggestionDocumentCRUDServiceImpl.class.getName()).log(Level.SEVERE, "Exception occured while finding docuemt for id " + id, ex);
+           log.error("Exception occured while finding docuemt for id " + id, ex);
         }
         return doc;
     }
@@ -64,7 +65,7 @@ public class SuggestionDocumentCRUDServiceImpl implements SuggestionDocumentCRUD
                 doc = dao.get(id);
             }
         } catch (IOException ex) {
-            Logger.getLogger(SuggestionDocumentCRUDServiceImpl.class.getName()).log(Level.SEVERE, "Exception occured while saving document" + document, ex);
+             log.error("Exception occured while saving document" + document, ex);
         }
         return doc;
     }
@@ -78,7 +79,7 @@ public class SuggestionDocumentCRUDServiceImpl implements SuggestionDocumentCRUD
             }
             dao.delete(id);
         } catch (IOException ex) {
-            Logger.getLogger(SuggestionDocumentCRUDServiceImpl.class.getName()).log(Level.SEVERE, "Exception occured while deleting document " + id, ex);
+            log.error("Exception occured while deleting document " + id, ex);
         }
         return doc;
     }
@@ -89,7 +90,7 @@ public class SuggestionDocumentCRUDServiceImpl implements SuggestionDocumentCRUD
         try {
             result = dao.findByQuery(query, page);
         } catch (IOException ex) {
-            Logger.getLogger(SuggestionDocumentCRUDServiceImpl.class.getName()).log(Level.SEVERE, "Exception occured while getting  documents for query " + query, ex);
+            log.error("Exception occured while getting  documents for query " + query, ex);
         }
         return result;
     }
