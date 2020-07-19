@@ -125,4 +125,16 @@ public class SuggestionConverterImplTest {
         assertEquals(resultRowDTO, result);
     }
 
+    /**
+     * Test of DTOEntity method, of class SuggestionConverterImpl.
+     */
+    @Test
+    public void testDTOEntity() {
+        System.out.println("DTOEntity");
+        SuggestionConverterImpl instance = new SuggestionConverterImpl();
+        Suggestion result = instance.DTOEntity(dto);
+        assertEquals(dto.getSuggestion(), result.getSuggestion());
+        assertEquals(dto.getId(), result.getId());
+    }
+
 }

@@ -270,7 +270,7 @@ public class SuggestionDocumentDAOTest {
         builder.buildQuery(queryMap);
         builder.buildHightLight(queryMap);
         ElasticResult<SuggestionDocument> result = ElasticSuggestionDAO.findByQuery(builder.build(), PageRequest.of(0, 100));
-        result.getEntityResults().forEach((resultDoc) -> {
+        result.getResults().forEach((resultDoc) -> {
             String suggestion = resultDoc.getObject().getSuggestion();
             if (suggestion.contains("this") || suggestion.contains("works") || suggestion.contains("well")) {
                 for (String fragment : resultDoc.getHighlight().get("suggestion")) {

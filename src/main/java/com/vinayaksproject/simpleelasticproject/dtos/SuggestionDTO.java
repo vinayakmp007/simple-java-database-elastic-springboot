@@ -16,7 +16,7 @@ public class SuggestionDTO extends AbstractDTO {
 
     private String suggestion;
 
-    private int id;
+    private Integer id;
 
     public String getSuggestion() {
         return suggestion;
@@ -26,11 +26,11 @@ public class SuggestionDTO extends AbstractDTO {
         this.suggestion = suggestion;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -59,7 +59,7 @@ public class SuggestionDTO extends AbstractDTO {
             return false;
         }
         final SuggestionDTO other = (SuggestionDTO) obj;
-        if (this.id != other.id) {
+        if (!this.id.equals(id)) {
             return false;
         }
         if (!Objects.equals(this.suggestion, other.suggestion)) {

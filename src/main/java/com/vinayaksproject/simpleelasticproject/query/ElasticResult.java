@@ -16,11 +16,11 @@ import java.util.List;
  */
 public final class ElasticResult<T> {
 
-    List<ElasticEntityResultRow<T>> entityResults;
+    List<ElasticEntityResultRow<T>> results;
     long totalHits;
 
     private ElasticResult(List<ElasticEntityResultRow<T>> entityResults, long totalHits) {
-        this.entityResults = entityResults;
+        this.results = entityResults;
         this.totalHits = totalHits;
     }
 
@@ -28,8 +28,8 @@ public final class ElasticResult<T> {
         return new ElasticResult<>(entityResults, totalHits);
     }
 
-    public List<ElasticEntityResultRow<T>> getEntityResults() {
-        return entityResults;
+    public List<ElasticEntityResultRow<T>> getResults() {
+        return results;
     }
 
     public long getTotalHits() {
