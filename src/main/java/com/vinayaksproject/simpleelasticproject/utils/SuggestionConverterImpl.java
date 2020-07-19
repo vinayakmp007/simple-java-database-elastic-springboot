@@ -80,7 +80,7 @@ public final class SuggestionConverterImpl implements SuggestionConverter {
         newDTO.setId(dto.getId());
 
         Suggestion entity = new Suggestion();
-        if (dto.getId() != 0) {
+        if (dto.getId() != null&&dto.getId() != 0) {
             entity.setId(newDTO.getId());
         }
         entity.setSuggestion(newDTO.getSuggestion());
