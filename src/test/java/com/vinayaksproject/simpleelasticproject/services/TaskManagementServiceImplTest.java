@@ -117,6 +117,7 @@ public class TaskManagementServiceImplTest {
     public void testSchedulePollFortasks() throws InterruptedException {
         System.out.println("schedulePollFortasks");
         when(config.isPollingEnabled()).thenReturn(true);
+        when(config.getPollingIntervalInMillis()).thenReturn(2000l);
         taskManagementService.initialize();
         assertTrue(taskManagementService.isPollingEnabled());
         taskManagementService.schedulePollFortasks();

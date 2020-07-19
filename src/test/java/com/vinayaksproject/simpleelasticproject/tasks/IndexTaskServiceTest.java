@@ -207,6 +207,7 @@ public class IndexTaskServiceTest {
             task = new TaskEntry();
             task.setId(i);
             when(jobConfig.getName()).thenReturn("testserv");
+            when(jobConfig.getNumberOfTasksAllowed()).thenReturn(8l);
             task.setServerName("testserv");
             task.setStatus(JobStatus.CREATED);
             list.add(task);

@@ -26,6 +26,7 @@ jobserver.pageSize: 100
 jobserver.maxTasksToPoll: 5
 jobserver.scheduleEnabled: true
 jobserver.pollingEnabled: true
+jobserver.pollingIntervalInMillis : 5000
 
 elastic.eshost: localhost
 elastic.esport: 9200
@@ -60,6 +61,8 @@ jobserver.pageSize: 100
 jobserver.maxTasksToPoll: 5
 jobserver.scheduleEnabled: true
 jobserver.pollingEnabled: true
+jobserver.pollingIntervalInMillis : 5000
+jobserver.numberoftasksallowed : 8
 
 elastic.eshost: localhost
 elastic.esport: 9200

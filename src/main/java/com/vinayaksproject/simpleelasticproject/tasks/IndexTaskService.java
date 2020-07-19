@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,10 +89,21 @@ public class IndexTaskService implements TaskService {
 
     @Override
     public void pollForTasks() {
-        List<TaskEntry> newTaskEntries = getAvailableTasks(25);
-        newTaskEntries.stream().filter((entry) -> (lockTasktoServer(entry))).map((entry) -> getIndexTaskDAO().findById(entry.getId())).map((updatedTask) -> generateExecutableTask(updatedTask.get())).forEachOrdered((newTask) -> {
-            executeTask(newTask);
-        });
+        int tasks = (int) jobServer.getNumberOfTasksAllowed();
+        for (Iterator<Map.Entry<Integer, Future>> onGoingTasksIter = getTaskMap().entrySet().iterator(); onGoingTasksIter.hasNext();) {
+
+            Future<TaskEntry> task = (Future<TaskEntry>) onGoingTasksIter.next();
+            if (task.isCancelled() || task.isDone()) {
+                onGoingTasksIter.remove();
+            }
+            tasks = (int) (jobServer.getNumberOfTasksAllowed() - getTaskMap().mappingCount());
+        }
+        if (tasks > 0) {
+            List<TaskEntry> newTaskEntries = getAvailableTasks(tasks);
+            newTaskEntries.stream().filter((entry) -> (lockTasktoServer(entry))).map((entry) -> getIndexTaskDAO().findById(entry.getId())).map((updatedTask) -> generateExecutableTask(updatedTask.get())).forEachOrdered((newTask) -> {
+                executeTask(newTask);
+            });
+        }
 
     }
 
