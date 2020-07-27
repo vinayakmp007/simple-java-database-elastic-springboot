@@ -24,3 +24,5 @@ the application.It is scheduled periodically.
 - Executing jobs
   - Indexing documents to Elastic search is done by tasks.Initially these task requests are populated in database where application instances peridocally poll.The 
   instances will lock some tasks and execute it.
+- Rest End point
+  - The CRUD operations uses SQL Database while searching and highlighting of entity uses elastic search.
