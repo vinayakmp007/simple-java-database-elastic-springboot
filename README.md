@@ -26,3 +26,19 @@ the application.It is scheduled periodically.
   instances will lock some tasks and execute it.
 - Rest End point
   - The CRUD operations uses SQL Database while searching and highlighting of entity uses elastic search.
+#### Examples
+Application instances are exposed in port 8081 and 8082
+  - Create 
+`curl -X POST http://localhost:8081/suggestion -i -d '{"suggestion":"Test this" }' -H "Content-Type: application/json";`
+
+  - Update
+`curl -X PUT http://localhost:8081/suggestion/1 -i -d '{"suggestion":"Test this" }' -H "Content-Type: application/json";`
+
+  - Retrieve
+`curl -X GET http://localhost:8081/suggestion/1 -i -H "Content-Type: application/json";`
+
+  - Delete
+`curl -X DELETE http://localhost:8081/suggestion/1 -i -d '{"suggestion":"Test this" }' -H "Content-Type: application/json";`
+
+  - Search
+`curl -X POST http://localhost:8081/suggestion/_search -i -d '{ "query":{"operation":"search","search":"string to be searched","field":"suggestion" ,"highlight":true }}' -H "Content-Type: application/json";`
