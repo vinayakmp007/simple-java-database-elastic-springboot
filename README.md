@@ -17,7 +17,7 @@ searching data effectively.This project  shows how  to synchronize data in datab
     1. Full Index 
        - It takes all non deleted items from the sql database to elastic search.It is normally executed one time when the application is deployed.
     2. Periodic Update
-       - It moves all the documents that where updated after the last was Periodic Update executed.This helps in syncing changes made to data in database not through
+       - It moves all the documents that were updated after the last was Periodic Update executed.This helps in syncing changes made to data in database not through
 the application.It is scheduled periodically.
     3. Instant Update
        - The Changes made to sql database usning application is immediately updated in the Elastic Search also.
